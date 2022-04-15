@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+	<!--要使用注解的话，必须打开该配置项。通过这个配置项，就可以打开针对注解的处理器把它注入到Spring容器中-->
+
+	<!-- mybatis 配置 sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:spring/mybatis-config.xml"></property>
+		<property name="mapperLocations" value="classpath:mapper/**/*Mapper.xml"></property>
+	</bean>
+
+    <!-- mybatis 配置 SQLSession模板 -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
+          scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <!--单独配置userMapper 映射器接口文件 给mapperInterface创建动态代理 实例由MapperFactoryBean的getObject()方法返回-->
+    <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="com.dj.boot.mapper.user.UserMapper"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- mybatis 配置  自动生成Dao接口实现 扫描特定包 成批创建映射器接口-->
+    <bean id="mybatisMapper" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.dj.boot.mapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <!--<property name="annotationClass" value="com.dj.boot.annotation.Login"/>
+        <property name="markerInterface" value="com.dj.boot.service.user.UserService"/>-->
+        <!--  markerInterface：基于接口的过滤器，继承了指定的这个接口dao才会被扫描器扫描，
+              annotationClass：配置了该注解的dao才会被扫描器扫描，
+        如果两者都被指定了,加入到接口中的映射器会匹配两种标准。默认情况下,这两个 属性都是 null,所以在基包中给定的所有接口可以作为映射器加载-->
+        <property name="processPropertyPlaceHolders" value="true"/>
+
+        <!--如果value${XXX} PropertyPlaceholderConfigurer实现了BeanFactoryPostProcessors 等其他的配置文件解析完成(bean工厂载入所有的bean配置)之后才会对其解析 (其他的配置文件将属性文件的属性加载到内存中)
+            后续的解析直接从内存获取
+            就是通过BeanFactoryPostProcessor/ beanFactory加载Beanfinition之后 在bean初始化(实例化)之前获得配置信息，遍历Beanfinition中的占位符进行替换
+        但是BeanDefinitionRegistries(注册Beanfinition)先于BeanFactoryPostProcessors 假如basePackage value${XXX} 是在内存中获取不到的
+        所以processPropertyPlaceHolders意义是手动找出PropertyResourceConfigurers进行调用 获取属性 -->
+    </bean>
+
+	<!-- 数据库连接池 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+	<!-- 基本参数 -->
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/1804"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <!-- 连接数据相关参数 -->
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="30"/>
+        <property name="maxIdle" value="5"/>
+        <property name="minIdle" value="2"/>
+        <property name="maxWait" value="1000"/>
+        <!-- 事务相关的属性 -->
+        <property name="defaultAutoCommit" value="false"/>
+        <!-- 连接健康情况 -->
+        <property name="timeBetweenEvictionRunsMillis" value="600000"/>
+        <property name="numTestsPerEvictionRun" value="3"/>
+        <property name="minEvictableIdleTimeMillis" value="1800000"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="validationQuery" value="select 1"/>
+        <!-- 连接泄漏回收参数 -->
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="180"/>
+        <property name="logAbandoned" value="true"/>
+    </bean>	
+
+	<!-- 使用JDBC事物 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean> 
+	<!-- 使用annotation注解方式配置事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+	<!-- mybatis 配置 SQLSession模板 -->
+	<!--<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
+		scope="prototype">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>-->
+
+	<!--spring 的JDBC模板 -->
+	<!--<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource">
+		</property>
+	</bean>-->
+	<!-- 激活扫描 @Repository @Service标注--> 
+	<!--<context:component-scan base-package="com.dj.boot">-->
+		<!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  -->
+	<!--</context:component-scan>-->
+</beans>

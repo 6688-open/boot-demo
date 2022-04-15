@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST</title>
+</head>
+<!--公共js  css-->
+<script th:src="@{/static/common/common.js}" ></script>
+<style>
+    .error{
+        color:red;
+    }
+    .msgNum {
+        background: #f00;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        top: -6px;
+        position: relative;
+        text-align: center;
+        bottom: 15px;
+        left: -22px;
+        color: #FFF;
+        padding: 2px 7px;  /* 不需要定义height与width，添加合适的padding使圆圈随字符长短变化而改变 */
+        z-index: 99999;
+
+    }
+</style>
+<body>
+<center>
+
+    <h2>hello boot!11</h2>
+    <form id="fm">
+         账号: <input  name="userName" id = "userName"  /><br>
+         密码: <input  name="password" id = "password"  /> <br>
+         手机: <input  name="disabled" id = "disabled" value="18351867657"  disabled="disabled"/> <br>
+
+        <p>
+            <input type="button" value="login" onclick="login()">
+            <a href="toLogin"> 已有账号?前去登录</a>
+        </p>
+        <p>
+            <input type='button' value='跳转保险单' onclick='gotoInsuranceDetail()'/><br>
+        </p>
+    </form>
+
+    <input id="currentTopMenuIdValue"  value="00001" />
+    <input id="currentTopMenuIdName"  value="00002" />
+
+
+
+
+    <div>
+        <ul>
+            <li id="top_1" style="color: blue; font-size: 20px; font-weight: bold" name="客服中心" class="form_li" onclick="clickFirstMenu('1', '客服中心');expandDefaultMenu('1');">客服中心</li>
+            <li id="top_2" style="color: blue; font-size: 20px; font-weight: bold" name="业务管理" class="form_li" onclick="clickFirstMenu('2', '业务管理');expandDefaultMenu('2');">业务管理</li>
+            <li id="top_3" style="color: blue; font-size: 20px; font-weight: bold" name="库存管理" class="form_li" onclick="clickFirstMenu('3', '库存管理');expandDefaultMenu('3');">库存管理</li>
+            <li id="top_4" style="color: blue; font-size: 20px; font-weight: bold" name="消息" class="form_li" onclick="clickFirstMenu('4', '消息');expandDefaultMenu('4');">消息</li>
+        </ul>
+
+
+    </div>
+
+    <div id="103582">
+        <ul>
+            <li id="li_103585">
+                <div class="module_div zr-nav-subtitle">
+                    <span id="1"  obj-id="1" obj-type="1" obj-url="com.cn1" obj-level="1"  obj-page="new" #end>售后事件</span>
+                    <span id="2"  obj-id="2" obj-type="2" obj-url="com.cn2" obj-level="2"  obj-page="new" #end>2</span>
+                    <span id="3"  obj-id="3" obj-type="3" obj-url="com.cn3" obj-level="3"  obj-page="new" #end>3</span>
+                </div>
+            </li>
+
+        </ul>
+
+
+    </div>
+
+
+
+
+    <div class="table-responsive">
+        <table id="eventOrderFlowDetail"
+               class="table table-striped table-bordered table-hover datatable">
+            <thead>
+                <tr role='row'>
+                    <th class='sorting_disabled center' style='width: 198px;'>
+                        发生时间
+                    </th>
+                    <th class='sorting_disabled center' style='width: 198px;'>
+                        处理方
+                    </th>
+                    <th class='sorting_disabled center' style='width: 350px;'>
+                        处理留言
+                    </th>
+                    <th class='sorting_disabled center' style='width: 98px;'>
+                        附件
+                    </th>
+                    <th class='sorting_disabled center' style='width: 198px;'>
+                        状态
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="message_content_SN100">   <!-- 添加一个id便于刷新内容-->
+                <tr >
+                    <td class=' center' th:title="createTime">
+                        2020/12/12 08:00:00
+                    </td>
+                    <td class=' center' th:title="operateRemark">
+                        云仓
+                    </td>
+                    <td class=' center' th:title="msg">
+                        你好：已收到留言
+                    </td>
+                    <td class=' center' th:title="file">
+                        附件
+                    </td>
+                    <td class=' center' th:title="status">
+                        处理中
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="eventOrderAidFunctionPanel" class="panel-collapse">
+        <div class="table-responsive">
+            <table id="eventOrderAidFunction" class="table table-striped table-bordered table-hover datatable">
+                <thead>
+                    <tr role='row'>
+                        <th class='sorting_disabled center' style='width: 198px;'>
+                            <button type="button" class="btn btn-primary eo-gap" data-toggle="modal"
+                                    data-target="#eventOrderSolvedStar" >
+                                <h3>已解决</h3>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div id="container"  class="container hidden_overflow_x_y" style="width:100%;height:900px;padding: 0">
+        <!-- 主题内容 start -->
+        <iframe id="mainIframe" class="main_iframe hidden_overflow_x_y" scrolling="auto" frameborder="0"  src="/goToMainIframe"  style="width:100%;height: 90vh;"></iframe>
+        <!-- 主题内容 end -->
+    </div>
+
+</center>
+</body>
+<script>
+
+$(function () {
+    debugger;
+    /*JS遍历对象的全部字段*/
+    var o = {a:1,b:2,c:3,d:4};
+    for(var name in o){
+        console.log(name + ':' + o[name]);
+    }
+    getDivSpan();
+    /*获取table里面有几行*/
+    var tbodyId = "#message_content_SN100";
+    var tbody_tr = tbodyId + " tr";
+    var l = $(tbody_tr).length;
+    //刷新
+    scanEachDetailPage(60*1000);
+})
+
+
+
+/*Iframe加载完成在进行执行函数*/
+$('#mainIframe')[0].onload = function() {
+    debugger;
+    var id = "iframe 已经加载完成。。。。。。。。。。。。。。。。。。";
+}
+
+var refreshDetailTimeOut;
+/**
+ *售后事件实时刷新信息
+ * */
+function scanEachDetailPage(quietMillis){
+    debugger;
+    window.clearInterval(refreshDetailTimeOut);
+    refreshDetailTimeOut = window.setInterval(ajaxRefreshAble, quietMillis);
+}
+
+/*function ajaxRefreshAble () {
+    debugger;
+    var eoId = $("#eventOrderDetail_eoId").val();
+    var tbodyId = "#message_content_SN100";
+    $.ajax({
+        url: "../xxxx/xxxxxxx.do?random=" + Math.random(),
+        type: "GET",
+        data: {eoId: eoId},
+        dataType: "json",
+        success: function (data) {
+            var eoFlowCount = data.eoFlowCount;
+            var tbody_tr = tbodyId + " tr";
+            if($(tbody_tr).length != eoFlowCount){
+                /!*describeDiv(tbodyId);*!/
+            }
+        },
+        error: function () {
+            return false;
+        }
+    });
+}*/
+
+function ajaxRefreshAble () {
+    var tbodyId = "#message_content_SN100";
+    describeDiv(tbodyId);
+}
+function describeDiv(tbodyId) {
+    //留言刷新
+    var mes = "";
+    for (let i = 0; i < 2; i++) {
+        mes += "<tr>";
+        mes += "<td class=' center' title='createTime' >" + "2021/11/11 11:11:11" + "</td>";
+        mes += "<td class=' center' title='operateRemark' >" + "工作台" + "</td>";
+        mes += "<td class=' center' title='msg' >" + "请上传附件" + "</td>";
+        mes += "<td class=' center' title='file' >" + "图片1" + "</td>";
+        mes += "<td class=' center' title='status' >" + "已解决已评价" + "</td>";
+        mes += "</tr>";
+    }
+    //$(tbodyId).html("");
+    $(tbodyId).append(mes);
+
+    //刷新操作按钮
+    var mes_btn = "<thead><tr role='row'><th class='sorting_disabled center' style='width: 198px;'>";
+    mes_btn += "<button  id=\"eventOrderRestitution\"     type=\"button\" class=\"btn btn-primary eo-gap\" style=\"width: 135px;\"> 转赔付事件</button>";
+    mes_btn += "</th> </tr> </thead> ";
+    $("#eventOrderAidFunction").html("");
+    $("#eventOrderAidFunction").append(mes_btn);
+    //操作按钮刷新
+}
+
+
+function getDivSpan() {
+    debugger;
+    var _span = $("#103582").children("ul:first").children("li:first").children("div:first").children("span:first");
+    //var _span = $("#1"); 通过span标签的id也可以获取 这里通过ID获取DOM元素时  不可以声明变量
+    var ids = _span.attr("id");
+    var urls = _span.attr("obj-url");
+    var menuIds = _span.attr("obj-id");
+    var types=_span.attr("obj-type");
+    var objLevels = _span.attr("obj-level");
+    var objPages = _span.attr("obj-page");
+
+    var title = _span.attr("subset-title-name");
+    if(title == undefined){
+        title = jQuery.trim(_span.text());
+    }
+
+
+    var _this = $(".module_div").children("span").eq(0);
+    var id = _this.attr("id");
+    var url = _this.attr("obj-url");
+    var menuId = _this.attr("obj-id");
+    var type=_this.attr("obj-type");
+    var objLevel = _this.attr("obj-level");
+    var objPage = _this.attr("obj-page");
+
+    var _tow = _this.parent().children("span").eq(1);
+    var id2 = _tow.attr("id");
+    var url2 = _tow.attr("obj-url");
+    var menuId2 = _tow.attr("obj-id");
+    var type2=_tow.attr("obj-type");
+    var objLevel2 = _tow.attr("obj-level");
+    var objPage2 = _tow.attr("obj-page");
+}
+
+
+
+
+
+
+
+function clickFirstMenu(id, name) {
+    if(name == '消息') {
+        $("#msgNum").text("0");
+    }
+    $('#currentTopMenuIdValue').attr("value", id);
+    $('#currentTopMenuIdName').attr("value", name);
+}
+
+function expandDefaultMenu(menuId) {
+
+}
+
+
+//下载模板
+function gotoInsuranceDetail() {
+    debugger;
+    var id= 12345678;
+    var timestamp = Date.parse(new Date());
+    window.location.href = "/gotoInsuranceDetail.do?id=" + id +"&timestamp=" + timestamp;
+}
+
+
+
+
+$("#userName").on("blur", function () {
+    debugger;
+    const username = $("#userName").val();
+    if (username != '' && username != null) {
+
+        if(isNaN($("#userName").val())){
+            layer.msg("请输入纯数字", {icon: 5,time:1000});
+            return false;
+        }
+
+
+        var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%]");
+        var result = $("#userName").val().match(pattern);
+        if(result){
+            layer.msg("分类名称中含有特殊字符", {icon: 5,time:1000});
+            return false;
+        }
+
+
+
+    }
+
+});
+
+
+
+
+
+
+
+
+
+    function login() {
+
+
+        debugger;
+        // 非空校验
+        var loginacct = $("#userName").val();
+        var userpswd = $("#password").val();
+        if (loginacct === "") {
+            layer.msg("用户登录账号不能为空，请输入", {time: 2000, icon: 5, shift: 6}, function () {
+            });
+            return;
+        }
+        if (userpswd === "") {
+            //alert("用户登录密码不能为空，请输入");
+            layer.msg("用户登录密码不能为空，请输入", {time: 2000, icon: 5, shift: 6}, function () {
+            });
+            return;
+        }
+
+        // 提交表单
+        // alert("提交表单");
+        //$("#loginForm").submit();
+        // 使用AJAX提交数据
+        var loadingIndex = null;
+        var  user = {};
+        user['userName']= loginacct;
+        user['password']= userpswd;
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "user/list",
+            data: JSON.stringify(user),
+            beforeSend: function () {
+                loadingIndex = layer.msg('处理中',{time: 2000, icon: 5, shift: 6});
+            }, success: function (result) {
+                layer.close(loadingIndex);
+                if (result.code === 200) {
+                    layer.msg("success", {time: 2000, icon: 5, shift: 6});
+                    window.location.href = "https://mail.qq.com";
+                } else {
+                    layer.msg("用户登录账号或密码不正确，请重新输入", {time: 2000, icon: 5, shift: 6}, function () {
+                    });
+                }
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+</script>
+</html>

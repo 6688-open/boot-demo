@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dj.boot.mapper.useritem.UserItemMapper">
+
+
+    <insert id="userItemAdd">
+        INSERT INTO user_item (user_id, nick_name) VALUES (#{userId},#{nickName})
+    </insert>
+
+
+
+    <select id="queryExceptionConf" resultType="com.dj.boot.pojo.useritem.ExceptionConf">
+        select * from exception_conf
+    </select>
+</mapper>

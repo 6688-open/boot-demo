@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户信息详情</title>
+</head>
+<!--公共js  css-->
+<script th:src="@{/static/common/common.js}" ></script>
+<script th:src="@{/static/common/sensitive.js}" ></script>
+<link th:href="@{/static/common/css/common.css}" href="" rel="stylesheet" type="text/css">
+
+<body>
+<div class="main-container" id="main-container">
+    <form class="form-inline clps_form col2" role="form">
+        <div class="panel panel-primary" style="margin-bottom: 10px;" id="userDetailBaseDiv">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#userDetailPanel">
+                        用户基本信息
+                    </a>
+                </h4>
+            </div>
+            <div id="userDetailPanel" class="panel-collapse" style="margin-left: 25px;">
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label  class="input-group-addon">编号</label>
+                            <input type="hidden" id="hidden_user_id" th:value="${user.id}">
+                            <input type="text" class="form-control" id="user_id" name="id" th:value="${user.id}" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label  class="input-group-addon">用户名</label>
+                            <input type="text" class="form-control" id="user_userName" name="userName" th:value="${user.userName}" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label  class="input-group-addon">密码</label>
+                            <input type="text" class="form-control" id="user_password" name="password" th:value="${user.password}" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label  class="input-group-addon">加密盐</label>
+                            <input type="text" class="form-control" id="user_salt" name="salt" th:value="${user.salt}" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label  class="input-group-addon">手机号码</label>
+    <!--
+                            <input type="text" class="form-control" id="user_phone" name="phone"  th:value="${user.phone}" onclick="getSensitive()" style="color: blue" >
+    -->
+                            <input type="text" class="form-control sensitiveAddress" id="user_phone" name="phone"  th:value="${user.phone}" sensitive="phone" style="color: blue" readonly>
+                        </div>
+                    </div>
+
+
+
+            </div>
+        </div>
+    </form>
+
+    <div class="panel panel-primary" style="margin-bottom: 10px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#userFlowPanel">
+                    处理日志
+                </a>
+            </h4>
+        </div>
+        <div id="userFlowPanel" class="panel-collapse">
+            <div class="table-responsive">
+                <table id="eventOrderFlowDetail"
+                       class="table table-striped table-bordered table-hover datatable">
+                    <thead>
+                    <tr role='row'>
+                        <th class='sorting_disabled center' style='width: 198px;'>
+                            发生时间
+                        </th>
+                        <th class='sorting_disabled center' style='width: 198px;'>
+                            处理方
+                        </th>
+                        <th class='sorting_disabled center' style='width: 350px;'>
+                            处理留言
+                        </th>
+                        <th class='sorting_disabled center' style='width: 198px;'>
+                            附件
+                        </th>
+                        <th class='sorting_disabled center' style='width: 198px;'>
+                            状态
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class=' center' title='2021-05-25 13:43:13'>2021-05-25 13:43:13</td>
+                        <td class=' center' title='商家'>商家</td>
+                        <td class=' center' title='已通知核实处理'>配送超时</td>
+                        <td class=' center' >
+                            <a  href='user/fileDownload?id=1' style="display: block;width: 120px;text-overflow:ellipsis;white-space: nowrap; overflow: hidden;" title="白冰.png">白冰.png</a>
+                        </td>
+                        <td class=' center' title='初始'>初始</td>
+                    </tr>
+                    <tr>
+                        <td class=' center' title='2021-05-25 13:43:13'>2021-05-25 14:43:13</td>
+                        <td class=' center' title='伙伴'>伙伴</td>
+                        <td class=' center' title='已通知核实处理'>已通知核实处理</td>
+                        <td class=' center' >
+                            <a  href='user/fileDownload?id=1' style="display: block;width: 120px;text-overflow:ellipsis;white-space: nowrap; overflow: hidden;" title="白冰.png">白冰.png</a>
+                        </td>
+                        <td class=' center' title='初始'>已处理</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="center" style="width: 100%; margin-bottom: 50px;">
+        <div class="btn-group">
+            <button id="mergeItem-form-sumbit" name="mergeItem-form-sumbit" type="button" data-loading-text="载入中"
+
+                    class="btn btn-primary">保存
+            </button>
+        </div>
+        <div class="btn-group">
+            <button id="mergeItem-form-sumbit1" name="mergeItem-form-sumbit" type="button" data-loading-text="载入中"
+
+                    class="btn btn-primary">保存1
+            </button>
+        </div>
+    </div>
+
+
+    <div class="panel panel-primary" style="margin-bottom: 10px;">
+        <div class="panel-heading" style="margin-bottom: 10px;">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#conditionLogPanel">
+                    操作日志
+                </a>
+            </h4>
+        </div>
+        <div id="conditionLogPanel" class="panel-body">
+            <table id="compensate_status_log"
+                   class="table table-striped table-bordered table-hover datatable">
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+
+    /*页面加载事件  */
+    $(function () {
+        debugger;
+        maskSensitiveMulti("#userDetailBaseDiv", $("#user_id").val(), "/user/queryCommonSensitive");
+
+
+     });
+
+    /**
+     * 脱敏获取指定信息
+     */
+    function getSensitive() {
+        var  id = $("#user_id").val();
+        jQuery.ajax({
+            type: "get",
+            url: "user/getById",
+            data: {id: id},
+            dataType: "json",
+            success: function (data) {
+                $("#user_phone").val(data.phone);
+                $("#user_phone").attr("disabled", true);
+                $("#user_phone").attr("style",'color: black');
+            }
+        });
+    }
+
+
+    jQuery(function ($) {
+        debugger;
+        $("#compensate_status_log").dataTable({
+            "aoColumns": [
+                {"sDefaultContent": '', "bSortable": false, "sTitle": "操作", "sClass": "center"},
+                {"mData": "userName", "sTitle": "用户名", "bSortable": true, "sClass": "center"},
+                {"mData": "password", "sTitle": "密码", "bSortable": false, "sClass": "center"},
+                {"mData": "createTimeStr", "sTitle": "创建时间", "bSortable": true, "sClass": "center"}
+            ],
+            "bPaginate": true, //是否分页
+            "iDisplayLength": 10, //默认显示数据条数
+            "bLengthChange": true,//改变每e页显示数据数量
+            "bFilter": false,//是否启用客户端过滤功能
+            "bSort": true,//是否使用排序
+            "bServerSide": true,
+            "aaSorting": [
+                [3, "desc"]
+            ],
+            "sAjaxSource": "/user/findUserListPage?rand=" + Math.random(),
+            "fnServerData": _compensateLogData,
+            "fnCreatedRow": function (nRow, aData, iDisplayIndex) {
+                jQuery('td:eq(0)', nRow).html(iDisplayIndex + 1);
+                return nRow;
+            }
+        });
+
+        function _compensateLogData(sSource, aoData, fnCallback) {
+            jQuery.ajax({
+                type: "post",
+                url: sSource,
+                ajaxCache: false,
+                dataType: "json",
+                "data": {
+                    password:$("#password").val(),
+                    userName:$("#userName").val(),
+                    aoData: JSON.stringify(aoData)
+                },
+                "success": function (resp) {
+                    fnCallback(resp);
+                },
+                "error": function (resp) {
+                }
+            });
+        }
+
+    });
+
+
+
+
+
+</script>
+</html>

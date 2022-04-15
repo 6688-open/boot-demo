@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>分配权限</title>
+</head>
+<!--公共js  css-->
+<script th:src="@{/static/common/common.js}" ></script>
+
+<!--导入相关-->
+<link rel="stylesheet" th:href="@{/dropone/css/font-awesome.min.css}" />
+<link rel="stylesheet" th:href="@{/static/dropone/css/font-awesome-ie7.min.css}" />
+<link rel="stylesheet" th:href="@{/static/dropone/css/dropzone.css}" />
+<link rel="stylesheet" th:href="@{/static/dropone/css/ace.min.css}" />
+<!--库里的图标-->
+<script th:src="@{/static/dropone/css/dropzone.min.js}"></script>
+
+<body>
+<div class="panel panel-primary">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="">首页〉</a>
+            </li>
+            <li>
+                权限
+            </li>
+            <li class="active">批量导入文件上传</li>
+        </ul>
+    </div>
+
+    <div class="page-content">
+        <div class="page-header">
+            <h1>
+                给角色分配资源导入
+                <small>
+                    <i class="icon-double-angle-right"></i>
+                    文件上传
+                </small>
+            </h1>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-8">
+                <!-- PAGE CONTENT BEGINS -->
+
+
+                <div class="alert alert-info">
+                    <i class="icon-hand-right"></i>
+                    <input class="btn btn-success" type='button' value='下载导入模板' onclick='uploadTemp()'/><br>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="icon-hand-right"></i>
+                    仅支持.xlsx 格式Excel导入, 文件大小不得超过5M。
+                    <button class="close" data-dismiss="alert">
+                        <i class="icon-remove"></i>
+                    </button>
+                </div>
+
+                <div id="dropzone">
+                    <form action="excel/import" method="post" class="dropzone dz-clickable">
+                        <div class="dz-default dz-message">
+                            <span>
+                                <span class="bigger-150 bolder">
+                                    <i class="icon-caret-right red"></i> Drop files</span> to upload
+                                <span class="smaller-80 grey">(or click)</span> <br>
+                                <i class="upload-icon icon-cloud-upload blue icon-3x"></i>
+                            </span>
+                        </div>
+                        <div class="input-group">
+                            <i class="icon-caret-right red"></i>
+                            <span class="input-group-addon">
+                                        <div style="width: 100px;">操作类型</div>
+                                </span>
+                            <div>
+                                <select  id="permission_operatorType" name="operatorType"  style="width: 200px;">
+                                    <option value="1">创建账号</option>
+                                    <option value="2">账号分配角色</option>
+                                    <option value="3">角色分配资源</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <i class="icon-caret-right red"></i>
+                                <span class="input-group-addon">
+                                        <div style="width: 100px;">应用编码</div>
+                                </span>
+                                <div>
+                                    <select  id="permission_appCode" name="appCode" class="singleSelect" style="width: 200px;">
+                                        <option value="cp">cp</option>
+                                        <option value="ad">ad</option>
+                                        <option value="seller">seller</option>
+                                    </select>
+                                </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+
+    <div class="col-sm-8 center">
+        <h4>
+            <label class="inline">
+                <button type="button" id="submit-execute" class="btn btn-success" disabled>执行导入</button>
+            </label>
+        </h4>
+        <div class="row" >
+            <div>
+                <span class="bigger-150 bolder">
+                      <i class="icon-caret-right red"></i> <span style="color: red">执行结果</span>
+                </span>
+            </div>
+            <textarea rows="10" cols="100" style="font-size:19px;" id="msg">
+            </textarea>
+        </div>
+        <div >
+            <center>
+                <button id="return" type="button" class="btn btn-primary eo-gap">返回</button>
+            </center>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    Dropzone.autoDiscover = false;//Dropzone多次初始化导致
+
+    $(function () {
+        try {
+            $(".dropzone").dropzone({     //#file_up_load_temp_register
+                /*url:"file/save",*/
+                paramName: "file",
+                maxFilesize: 10,
+                maxFiles: 20,
+                parallelUploads: 100,
+                addRemoveLinks: false,
+                dictResponseError: '上传文件失败',
+                dictCancelUpload: '取消上传',
+                dictRemoveFile: '移除文件',
+                dictCancelUploadConfirmation: '你确定要取消上传吗?',
+                dictInvalidFileType: '只支持Excel、CSV文件上传',
+                acceptedFiles: ".xlsx",
+                autoProcessQueue: false,
+                init: function () {
+                    var submitButton = document.querySelector("#submit-execute")
+                    myDropzone = this;
+                    submitButton.addEventListener("click", function () {
+                        myDropzone.processQueue();
+                    });
+                    this.on("addedfile", function (file) {
+                        var removeButton = Dropzone.createElement("<a class='dz-remove' href='javascript:void(0));'>移除</a>");
+                        var _this = this;
+                        removeButton.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            _this.removeFile(file);
+                            if (_this.getAcceptedFiles().length === 0) {
+                                $("#submit-execute").attr("disabled", true);
+                            }
+                        });
+                        file.previewElement.appendChild(removeButton);
+                        if (this.getAcceptedFiles().length === 0) {
+                            $("#submit-execute").attr("disabled", false);
+                        }
+                    });
+
+                    //后台上传成功，设置提示。  利用html换行符&#10;或&#13;
+                    this.on("success", function (file, data) {
+                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                            $(".dz-error-message").html("<span>" + data.msg + "</span>");
+                            $("#msg").html("");
+                            $("#msg").append(data.msg).append("&#10;")
+                                     .append(data.data.size).append("&#13;")
+                                     .append(data.data.eoNo);
+                        }
+                    });
+
+                    //后台上传失败,设置提示。
+                    this.on("error", function (file, data) {
+                        if (data.msg != undefined) {
+                            $(".dz-error-message").html("<span>" + data.msg + "</span>");
+                        }
+                    });
+                }
+            });
+        } catch (e) {
+            alert('暂时不支持该旧版本浏览器，请更新!');
+        }
+        /*$('#content_body_option').on('click',"button.close", function () {
+            if(applyZone){
+                applyZone.destroy();
+            }
+        });*/
+    });
+
+
+
+    //返回
+    $("#return").on("click",function () {
+        window.location.href = "/toLogin";
+    });
+
+    //下载模板
+    function uploadTemp() {
+        try {
+            window.location.href = "/excel/uploadTemp";
+        } catch (e) {
+            layer.msg("系统异常"+e, {icon: 5});
+        }
+    }
+</script>
+</html>

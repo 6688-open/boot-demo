@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>报表</title>
+</head>
+<script th:src="@{/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/layer/layer.js}"></script>
+<script th:src="@{/jquery-validation-1.14.0/dist/jquery.validate.min.js}"></script>
+<script th:src="@{/jquery-validation-1.14.0/dist/localization/messages_zh.js}"></script>
+
+<style>
+    .error{
+        color:red;
+    }
+    .msgNum {
+        background: #f00;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        top: -6px;
+        position: relative;
+        text-align: center;
+        bottom: 15px;
+        left: -22px;
+        color: #FFF;
+        padding: 2px 7px;  /* 不需要定义height与width，添加合适的padding使圆圈随字符长短变化而改变 */
+        z-index: 99999;
+
+    }
+</style>
+<body>
+<h2>报表</h2>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+
+
+<center>
+    <div id="main" style="width: 800px;height:450px;"></div>
+    <p>
+        <a href="javascript:void(0)" style="color: blue"  onclick="linkDetail( '111','11')"> <div th:text="${orderNo}"></div></a>
+    </p>
+
+    <input type="hidden" class="form-control" id="eventOrderDetail_clpsOrderNo" name="eventOrderDetail_clpsOrderNo" >
+
+    <button type="button" disabled >
+        <h3>已处理</h3>
+    </button>
+</center>
+</body>
+<script>
+
+$(function () {
+    debugger;
+})
+
+
+function linkDetail(no, type) {
+    debugger;
+    var str = no + type;
+    if (type = 11) {
+        const param = {
+            userName: "111",
+        };
+        loadWarehouse(param);
+
+        var clpsOrderNo = $("#eventOrderDetail_clpsOrderNo").val();
+        if (null != clpsOrderNo && "" != clpsOrderNo) {
+            alert("单号"+clpsOrderNo);
+            var wbId = 12222;
+        }
+
+        alert(wbId);
+
+    }
+
+
+
+}
+
+function loadWarehouse(param){
+    debugger;
+    $.ajax({
+        "type": "post",
+        "url": "/echars/queryUserInfo.do",
+        "dataType": "json",
+        "data": param,
+        async:false,
+        success: function (data) {
+            debugger;
+            alert(data.phone);
+            $("#eventOrderDetail_clpsOrderNo").val(data.phone);
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

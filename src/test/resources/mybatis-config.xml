@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="dialect" value="MYSQL"/>
+	</properties>
+	<!--一些重要的全局配置-->
+	<!--一级缓存的作用范围是SqlSession级别的，但是SqlSession是单线程的，不同线程间的操作会有一些脏数据的问题。
+	    二级缓存的范围更大，是Mapper级别的缓存，因此不同sqlSession间可以共享缓存。
+	-->
+	<settings>
+		<setting name="cacheEnabled" value="true"/>  <!--开启二级缓存需要配置cacheEnabled为true，这个属性默认为true-->
+		<!--<setting name="lazyLoadingEnabled" value="true"/>-->
+		<!--<setting name="multipleResultSetsEnabled" value="true"/>-->
+		<!--<setting name="useColumnLabel" value="true"/>-->
+		<!--<setting name="useGeneratedKeys" value="false"/>-->
+		<!--<setting name="autoMappingBehavior" value="PARTIAL"/>-->
+		<!--<setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>-->
+		<!--<setting name="defaultExecutorType" value="SIMPLE"/>-->
+		<!--<setting name="defaultStatementTimeout" value="25"/>-->
+		<!--<setting name="defaultFetchSize" value="100"/>-->
+		<!--<setting name="safeRowBoundsEnabled" value="false"/>-->
+		<!--<setting name="mapUnderscoreToCamelCase" value="false"/>-->
+		<!--<setting name="localCacheScope" value="STATEMENT"/>-->   <!--默认开启就是Sesssion级别的。 关闭一级缓存就设置STATEMENT-->
+		<!--<setting name="jdbcTypeForNull" value="OTHER"/>-->
+		<!--<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>-->
+		<!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
+	</settings>
+
+	<!--BaseResultMap 里面的别名-->
+	<!--<typeAliases>
+		<typeAlias type="com.dj.boot.pojo.User" alias="User"/>
+	</typeAliases>-->
+
+	<plugins>
+		<plugin interceptor="com.dj.boot.configuration.interceptor.dao.PaginationInterceptor"/>
+	</plugins>
+
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+				<property name="url" value="jdbc:mysql://localhost:3306/1804?serverTimezone=UTC"/>
+				<property name="username" value="root"/>
+				<property name="password" value="123456"/>
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<!--这边可以使用package和resource两种方式加载mapper-->
+		<!--<package name="包名"/>-->
+		<!--<mapper resource="./mappers/SysUserMapper.xml"/>
+        <package name="com.example.demo.dao"/> -->
+		<mapper resource="mapper/user/UserMapper.xml"/>
+	</mappers>
+</configuration>

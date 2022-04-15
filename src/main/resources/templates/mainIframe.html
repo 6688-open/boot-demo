@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>工作台</title>
+</head>
+<script th:src="@{/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/layer/layer.js}"></script>
+<script th:src="@{/jquery-validation-1.14.0/dist/jquery.validate.min.js}"></script>
+<script th:src="@{/jquery-validation-1.14.0/dist/localization/messages_zh.js}"></script>
+<script th:src="@{/md5-min.js}"></script>
+
+<link rel="stylesheet" th:href="@{/select2-develop/dist/css/select2.min.css}" />
+<script th:src="@{/select2-develop/dist/js/select2.min.js}"></script>
+<style>
+    .error{
+        color:red;
+    }
+</style>
+<body>
+<center>
+    <h2>用  户  登  录</h2>
+    <form id="fm">
+        <p>
+            <label for="userName">用户:</label>
+            <input id="userName" name="userName" type="text" placeholder="用户名/手机号/邮箱"/>
+        </p>
+        <p>
+            <label for="password">密码:</label>
+            <input id="password" name="password" type="password" placeholder="密码">
+        </p>
+        <p>
+            <input type="submit" value="login">
+        </p>
+
+
+    </form>
+
+</center>
+
+</body>
+<script>
+    $(function () {
+        debugger;
+       alert("iframe 正在加载。。。。。。。。。。。。。。。。。。")
+    })
+</script>
+
+</html>

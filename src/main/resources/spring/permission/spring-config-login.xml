@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/util
+            http://www.springframework.org/schema/util/spring-util-3.1.xsd" default-autowire="byName">
+    <!--业务系统登陆过滤连-->
+    <bean id="loginFilterChain"
+          class="com.dj.boot.configuration.permission.filter.login.LoginFilterChain">
+        <property name="SSO" value="true"/>
+        <property name="filters">
+            <util:list list-class="java.util.LinkedList">
+                <!--<ref bean="checkTicketFilter"/>-->
+                <!--<ref bean="checkLoginContextFilter"/>-->
+                <!--<ref bean="updateLoginFilter"/>-->
+                <!--<ref bean="loginFilter"/>-->
+                <!--<ref bean="checkAppFilter"/>-->
+                <!--<ref bean="accessAppFilter"/>-->
+            </util:list>
+        </property>
+        <property name="chainRules">
+            <util:list>
+                <value>/*</value>
+            </util:list>
+        </property>
+    </bean>
+</beans>

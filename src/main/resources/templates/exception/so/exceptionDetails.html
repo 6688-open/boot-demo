@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST</title>
+</head>
+<!--公共js  css-->
+<script th:src="@{/static/common/common.js}" ></script>
+<style>
+    .wizard-noSteps {
+        list-style: none;
+        display: table;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        position: relative
+    }
+
+    .wizard-noSteps li {
+        display: table-cell;
+        text-align: center;
+        width: 1%
+    }
+
+    .wizard-noSteps li .step {
+        border: 5px solid #ced1d6;
+        color: #546474;
+        font-size: 15px;
+        border-radius: 100%;
+        background-color: #FFF;
+        position: relative;
+        z-index: 2;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 30px;
+        text-align: center
+    }
+
+    .wizard-noSteps li:last-child:before {
+        max-width: 50%;
+        width: 50%
+    }
+
+    .wizard-noSteps li:first-child:before {
+        max-width: 51%;
+        left: 50%
+    }
+
+    .wizard-noSteps li.active_red:before, .wizard-noSteps li.complete:before, .wizard-noSteps li.active_red .step, .wizard-noSteps li.complete .step {
+        border-color: red;
+    }
+
+    .wizard-noSteps li.active_green:before, .wizard-noSteps li.complete:before, .wizard-noSteps li.active_green .step, .wizard-noSteps li.complete .step {
+        border-color: green;
+    }
+
+    .wizard-noSteps li.active_yel:before, .wizard-noSteps li.complete:before, .wizard-noSteps li.active_yel .step, .wizard-noSteps li.complete .step {
+        border-color: #ffff00;
+    }
+
+    .wizard-noSteps li.complete .step {
+        cursor: default;
+        color: #FFF;
+        -webkit-transition: transform ease .1s;
+        transition: transform ease .1s
+    }
+
+    .wizard-noSteps li.complete .step:before {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 100%;
+        content: "\f00c";
+        background-color: #FFF;
+        z-index: 3;
+        font-family: FontAwesome;
+        font-size: 17px;
+        color: #87ba21
+    }
+
+    .wizard-noSteps li.complete:hover .step {
+        -moz-transform: scale(1.1);
+        -webkit-transform: scale(1.1);
+        -o-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+        border-color: #80afd4
+    }
+
+    .wizard-noSteps li.complete:hover:before {
+        border-color: #80afd4
+    }
+
+    .wizard-noSteps li .title {
+        display: block;
+        margin-top: 4px;
+        max-width: 100%;
+        color: #949ea7;
+        font-size: 14px;
+        z-index: 104;
+        text-align: center;
+        table-layout: fixed;
+        word-wrap: break-word
+    }
+
+    .wizard-noSteps li.complete .title, .wizard-noSteps li.active .title {
+        color: #2b3d53
+    }
+
+    .step-content .step-pane {
+        display: none;
+        min-height: 200px;
+        padding: 4px 8px 12px
+    }
+
+    .step-content .active {
+        display: block
+    }
+
+    @media only screen and (max-width:767px) {
+        .wizard-noSteps li .step {
+            width: 30px;
+            height: 30px;
+            line-height: 24px;
+            border-width: 3px
+        }
+
+        .wizard-noSteps li:before, .wizard-noSteps li:after {
+            border-width: 3px
+        }
+
+        .wizard-noSteps li.complete .step:before {
+            line-height: 24px;
+            font-size: 13px
+        }
+
+        .wizard-noSteps li:before {
+            top: 16px
+        }
+    }
+</style>
+<body>
+<center>
+
+    <form class="form-inline clps_form col3" role="form">
+        <div id="soException_soExceptionDiv1_11780">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#conditionPanel">
+                            异常信息
+                        </a>
+                    </h4>
+                </div>
+                <div id="billExceptionDetail_conditionPanel_exception" class="panel-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="exceptionDto_billTypeStr" class="input-group-addon">异常单据类型</label>
+                            <input id="exceptionDto_billTypeStr" class="form-control" th:value="销售订单" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="exceptionDto_exceptionCodeStr" class="input-group-addon">异常类型</label>
+                            <input id="exceptionDto_exceptionCodeStr" class="form-control" th:value="异常类型" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="exceptionDto_pauseTime" class="input-group-addon">异常生成时间</label>
+                            <input id="exceptionDto_pauseTime" class="form-control" value="2022-02-01 12:11:22" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="exceptionDto_handlerGroup" class="input-group-addon">处理方</label>
+                            <input id="exceptionDto_handlerGroup" class="form-control" value="1" readonly />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="exceptionDto_exceptionDesc" class="input-group-addon">异常原因</label>
+                            <textarea id="exceptionDto_exceptionDesc" name="soExceptionListSoNo" class="form-control numberTextFormat" readonly>异常原因22222222222222222222222222222222222异常原因222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="exceptionDto_handlerAction" class="input-group-addon">处理方案</label>
+                            <textarea id="exceptionDto_handlerAction" class="form-control numberTextFormat" readonly>异常原因22222222222222222222222222222222222异常原因222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#11780soDetail_info">
+                            订单信息
+                        </a>
+                    </h4>
+                </div>
+                <div id="soDetail_info_11780" class="panel-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="soException_soNo_11780" class="input-group-addon">订单编号</label>
+                            <input id="soException_soNo_11780"  class="form-control" th:value="${user.id}" readonly />
+                            <input id="soException_id" th:type="hidden" class="form-control" th:value="${user.id}" readonly/>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="billexceptionType" class="input-group-addon">异常单据类型</label>
+                            <select id="billexceptionType" class="form-control" onchange="buildExceptionType(this.options[this.options.selectedIndex].value)">
+                                <option value="">请选择</option>
+                                <option value="1">销售订单</option>
+                                <option value="3">采购单</option>
+                                <option value="4">退货单</option>
+                                <option value="5">退供单</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="billexceptionExceptionCode" class="input-group-addon">异常类型</label>
+                            <select id="billexceptionExceptionCode" class="form-control">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#conditionPanel">
+                            配送信息
+                        </a>
+                    </h4>
+                </div>
+                <div id="soMainDetail_conditionPanel_shipper" class="panel-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="soMainDetail_warehouseName_11780" class="input-group-addon">库房名称</label>
+                            <input id="soMainDetail_warehouseName_11780" class="form-control" th:value="${user.userName}" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <label for="soMainDetail_shipperName_11780" class="input-group-addon">承运商</label>
+                        <input id="soMainDetail_shipperName_11780" class="form-control" value="1111" readonly />
+                        <input id="soMainDetail_shipperNo_11780" class="form-control" value="111" type="hidden"/>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#conditionPanel">
+                            订单异常
+                        </a>
+                    </h4>
+                </div>
+                <div id="soException_conditionPanel_div_11780" class="panel-body">
+                    <table id="soException_soExceptionList_11780" class="table table-striped table-bordered table-hover datatable">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!--==================================================================================================================================
+    ==================================================================================================================================-->
+    <!-- Modal -->
+    <!--<div class="modal fade bs-example-modal-lg" id="consigneeModal_11780" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改订单信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="soException_soExceptionDiv_11780">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#11780soDetail_info">
+                                        客户信息
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="soDetail_info_$!{soMain.soNo}" class="panel-body">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label for="soException_consignee_11780" class="input-group-addon">客户姓名</label>
+                                        <input id="soException_consignee_11780" name="receiveName" class="form-control" value="点击修改"
+                                               sensitive="11780_consignee" soExceptionEdit="false" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="soException_errId_11780" class="form-control" value="" />
+                        <input id="soException_soId_11780" class="form-control" value=""  />
+                        <input id="soException_type_11780" class="form-control" value=""  />
+                        <button type="button" onclick="editSo()" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+    <!--<div class="modal fade bs-example-modal-lg" id="editShipModal_11780" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="soException_editShipExceptionDiv_11780">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#11780soShip_info">
+                                        指定承运商
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="soShip_info_11780" class="panel-body">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label for="soException_shipperNo_11780" class="input-group-addon">承运商</label>
+                                        <select class="form-control"   id="soException_shipperNo_11780"   onchange="getCarrierDetail(this.value)"  style="width: 50%">
+                                            <option value="">选择承运商</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div id="soException_thirdWay_11780"  class="form-group" style="display: none" >
+                                    <div class="form-group" >
+                                        <div class="input-group">
+                                            <label for="soException_thirdWayBill_11780" class="input-group-addon">三方运单号</label>
+                                            <input id="soException_thirdWayBill_11780"   class="form-control" value="91234567876543"
+                                                   style="width: 50%" />
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input id="soException_ship_errId_11780" class="form-control" value=""  />
+                            <input id="soException_ship_soId_11780" class="form-control" value=""  />
+                            <input id="soException_ship_type_11780" class="form-control" value=""  />
+                            <input id="soInfo_owner_11780" class="form-control" value=""  />
+                            <button type="button" onclick="return editShip()" class="btn btn-primary">保存</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+<!--==================================================================================================================================
+==================================================================================================================================-->
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="edit_basicModal_11780" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myOrderInfoModalLabel">人工处理</h4>
+                    </div>
+                    <div class="modal-body">
+                            <div id="soException_soExceptionDiv_info_11780" style="display: none">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#11780soDetail_info">
+                                                修改订单信息
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="edit_soDetail_info_11780" class="panel-body">
+
+                                        <table class="table">
+                                            <tr>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <label for="edit_soException_consignee_11780" class="input-group-addon">客户姓名</label>
+                                                            <input id="edit_soException_consignee_11780" name="receiveName" class="form-control" value="王佳"
+                                                                   sensitive="11780_consignee" soExceptionEdit="false"  />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <label for="soException_consigneeMobile_11780_" class="input-group-addon">手机</label>
+                                                            <input id="soException_consigneeMobile_11780_" name="senderMobile" class="form-control" value="18351867657"
+                                                                   sensitive="11780_consigneeMobile" soExceptionEdit="false"  />
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <label for="soException_consigneeAddr_11780" class="input-group-addon">收货地址</label>
+                                                            <input id="soException_consigneeAddr_11780" name="senderAddress" class="form-control" value="地址"
+                                                                   sensitive="11780_consigneeAddr" soExceptionEdit="false"  />
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="soException_editShipExceptionDiv_info_11780" style="display: none">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#_11780soShip_info">
+                                                修改承运商
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="soShip_info__11780" class="panel-body">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <label for="soException_shipperNo_11780" class="input-group-addon">承运商</label>
+                                                <select class="form-control"   id="soException_shipperNo_11780"   onchange="getCarrierDetail(this.value)"  style="width: 50%">
+                                                    <option value="">选择承运商</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                        <div id="soException_thirdWay_11780"  class="form-group" style="display: none" >
+                                            <div class="form-group" >
+                                                <div class="input-group">
+                                                    <label for="soException_thirdWayBill_11780" class="input-group-addon">三方运单号</label>
+                                                    <input id="soException_thirdWayBill_11780"   class="form-control" value="98765432" style="width: 50%" />
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="soException_addressShipExceptionDiv_info_11780" style="display: none">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#_11780address_info">
+                                                修改青龙运单地址
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="address_info__11780" class="panel-body">
+                                        <div id="soException_address__11780"  class="form-group"  >
+                                            <div class="form-group" >
+                                                <div class="input-group">
+                                                    <label for="errAddress" class="input-group-addon">青龙运单地址</label>
+                                                    <textarea id="errAddress" class="form-control" rows='3' placeholder="请输入青龙运单地址"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="soException_remarkShipExceptionDiv_info_11780" style="display: none">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#_11780remark_info">
+                                                备注说明
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="remark_info__11780" class="panel-body">
+                                        <div id="soException_remark__11780"  class="form-group"  >
+                                            <div class="form-group" >
+                                                <label style="color: red" id="tipMsg"></label>
+                                                <div class="input-group">
+                                                    <label for="errReason" class="input-group-addon">恢复原因</label>
+                                                    <textarea id="errReason" class="form-control" rows='3' placeholder="请输入恢复原因"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="modal-footer">
+                                <input id="soException_info_errId_11780" class="form-control" type="hidden" value="" />
+                                <input id="soException_info_soId_11780" class="form-control" type="hidden"value=""  />
+                                <input id="soException_info_type_11780" class="form-control" type="hidden" value=""  />
+                                <input id="soInfo_info_owner_11780" class="form-control" value="" type="hidden" />
+                                <button type="button" onclick="reDeal()" class="btn btn-primary">重新执行</button>
+                                <button type="button" onclick="reDealNew()" class="btn btn-primary">重新执行NEW</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</center>
+</body>
+<script>
+    var id ;
+    var soExceptionCentre;
+    jQuery(function($) {
+        id = $("#soException_id").val();
+        debugger;
+        soExceptionCentre = new SoExceptionCentreDetail();
+        soExceptionCentre.dataTableExceptions("#soException_soExceptionList_" + id)
+    });
+
+
+    var SoExceptionCentreDetail = function() {
+        var grid;
+        SoExceptionCentreDetail.prototype.dataTableExceptions = function(arg) {
+            grid = $(arg).DataTable({
+                "aoColumns": [
+                    {
+                        "mData": "",
+                        "sDefaultContent": '',
+                        "bSortable": false,
+                        "sTitle": "操作",
+                        "sClass": "center",
+                        "mRender": function(data, type, full) {
+                            var soExceptionProcessBtn = new SoExceptionProcessBtn();
+                            return soExceptionProcessBtn.getInstance(full).outerHTML;
+                        }
+                    },
+                    {
+                        "mData": "",
+                        "sDefaultContent": '',
+                        "bSortable": false,
+                        "sTitle": "操作2",
+                        "sClass": "center",
+                        "mRender": function(data, type, full) {
+                            var soExceptionProcessBtn = new SoExceptionProcessBtnNew();
+                            return soExceptionProcessBtn.getInstance(full).outerHTML;
+                        }
+                    },
+                    {
+                        "mData": "errType",
+                        "sTitle": "异常类型",
+                        "sClass": "center",
+                    },
+                    {
+                        "mData": "errStatusDesc",
+                        "sTitle": "暂停状态",
+                        "sClass": "center",
+                    },
+                    {
+                        "mData": "errReason",
+                        "sTitle": "暂停原因描述",
+                        "sClass": "center",
+                    },
+                    {
+                        "mData": "errDuration",
+                        "sTitle": "异常处理时长",
+                        "sClass": "center",
+                    },
+                    {
+                        "mData": "renewTime",
+                        "sTitle": "异常恢复时间",
+                        "sClass": "center",
+                    },
+                    {
+                        "mData": "renewReason",
+                        "sTitle": "异常恢复原因",
+                        "sClass": "center",
+                    },
+                    {
+                        "mData": "operateUser",
+                        "sTitle": "操作人",
+                        "sClass": "center",
+                    }
+                ],
+                "bPaginate": false, //是否分页
+                "bProcessing": false,
+                "bServerSide": true,
+                "bSort": false,
+                "bScrollInfinite": true,
+                "sScrollY": "500px",
+                "sAjaxSource":  "/exceptionCentre/getExceptionListBySoId?id="+id+"&rand="+ Math.random(),
+                "sLoadingRecords": "正在加载...",
+            });
+        };
+
+        SoExceptionCentreDetail.prototype.reload = function() {
+            grid.ajax.reload();
+        };
+    };
+
+
+
+
+    var SoExceptionProcessBtnNew = function() {
+        var __self__;
+        SoExceptionProcessBtnNew.prototype.getInstance = function(full) {
+            __init__(full);
+            return __self__;
+        };
+
+        function __init__(full) {
+            debugger;
+            __self__ = document.createElement("div");
+            $(__self__).html("");
+            $(__self__).addClass("btn-group btn-group-sm");
+            $(__self__).append(__createButton__(full));
+        }
+
+        function __createButton__(full) {
+            debugger
+            var processBtnStr = full.processBtn;
+            var button = document.createElement("button");
+            $(button).attr("type", "button")
+            debugger;
+            if(full.errStatus == 1) {
+                debugger
+                if (typeof(processBtnStr) != "undefined" && processBtnStr != null) {
+                    debugger;
+                    var processBtn = $.parseJSON(processBtnStr);
+                    $(button).html(processBtn.errOperate + "&nbsp;");
+                    $(button).addClass("btn btn-warning");
+                    if (processBtn.errDisposes.length > 0) {
+                        $(button).attr("soId", full.soId);
+                        $(button).attr("errId", full.id);
+                        $(button).attr("pauseTime", full.pauseTime);
+                        $(button).attr("fullMsg", JSON.stringify(full));
+                        $(button).attr("href", "javascript:;");
+                        $(button).attr("onclick", "javascript:dealNew(this)");
+                        //$(__self__).append(a);
+                    }
+                } else {
+                    $(button).html("暂不支持处理");
+                    $(button).addClass("btn btn-danger");
+                }
+            }else if(full.errStatus == 2){
+                $(button).html("已处理");
+                $(button).addClass("btn btn-success");
+            }else if(full.errStatus == 3){
+                $(button).html("处理中");
+                $(button).addClass("btn btn-info");
+            }
+            return button;
+        }
+    };
+
+
+    function dealNew(obj) {
+        debugger;
+        var fullMsg = $(obj).attr("fullMsg");
+        var full = $.parseJSON(fullMsg);
+        var processBtnStr = full.processBtn;
+        var processBtn = $.parseJSON(processBtnStr);
+        if (processBtn.admin) {
+            realDeal(obj, full, processBtn);
+        } else {
+            /*layer.msg("无权限操作!", {icon: 5});
+            return;*/
+            bootbox.alert('无权限操作!');
+            return;
+        }
+    }
+
+    function realDeal(obj, full, processBtn) {
+        debugger;
+        $("#soException_info_errId_" + id).val($(obj).attr("errId"));
+        $("#soException_info_soId_" + id).val($(obj).attr("soId"));
+        var types = [];
+        for (i in processBtn.errDisposes) {
+            var dispose = processBtn.errDisposes[i];
+            var errDispose = $.parseJSON(dispose);
+            types.push(errDispose.type);
+            $("#soException_info_type_" + id).val(types);
+            if (errDispose.type == 7) {//协商再投
+                redeveliver(obj);
+                return;
+            } else if (errDispose.type == 4) {
+                //展示修改订单信息
+                $("#soException_soExceptionDiv_info_" + id).css("display","block");
+            } else if (errDispose.type == 5) {
+                //展示青龙地址
+                $("#soException_addressShipExceptionDiv_info_" + id).css("display","block");
+            } else if (errDispose.type == 6) {
+                // 清空承运商
+                resetShippers(id);
+                // 加载承运商
+                queryShippersBySoNo(id);
+                //展示修改承运商
+                $("#soException_editShipExceptionDiv_info_" + id).css("display","block");
+            } else {
+                $("#tipMsg").text(errDispose.tipMsg);
+                //展示执行备注
+                $("#soException_remarkShipExceptionDiv_info_" + id).css("display","block");
+            }
+        }
+        $("#soException_info_type_" + id).val(types);
+        $("#edit_basicModal_" + id).modal('show');
+    }
+
+    function reDealNew() {
+        debugger;
+        var types = $("#soException_info_type_" + id).val();
+        var typeArr = types.split(',');
+        for(var i=typeArr.length-1;i>=0;i--){
+            var type = typeArr[i];
+            /*alert(type);*/
+
+            if (type == 4) {
+                alert(4);
+                var data = {};
+                $("#soException_soExceptionDiv_info_" + id + " [soExceptionEdit='false']").each(function(index, element) {
+                    data[$(this).attr("name")] = $(this).val();
+                });
+                if ($.isEmptyObject(data)) {
+                    /*bootbox.alert('订单信息无修改!');
+                    return;*/
+                    alert("3333333333");
+                    splice_arr(type, typeArr);
+                }
+            } else if (type == 6) {
+                debugger;
+                var data = {};
+                var shipperNo =  $("#soException_shipperNo_"+id+" option:selected").val();
+                var oldShipperNo = $("#soMainDetail_shipperNo_"+id).val();
+                if(shipperNo==oldShipperNo){
+                    splice_arr(type, typeArr);
+                } else {
+                    var  owner = $("#soInfo_info_owner_" + id).val();
+                    var  thirdWayBill = $("#soException_thirdWayBill_" + id).val();
+                    if(owner=='1'){
+                        if(thirdWayBill==''){
+                            bootbox.alert('三方运单号不能为空!');
+                            return false;
+                        }
+                    }
+                }
+
+            } else if (type == 5) {
+
+                // 验证
+                var errAddress = $("#errAddress").val().trim();
+                if(errAddress==''){
+                    /*bootbox.alert("请填写青龙地址");
+                    return;*/
+                    splice_arr(type, typeArr);
+                }
+            }
+        }
+        var newTypes = [];
+        for(var i =0 ;i<typeArr.length;i++){
+            var type = typeArr[i];
+            newTypes.push(type);
+        }
+        $("#soException_info_type_" + id).val(newTypes);
+        var types1 = $("#soException_info_type_" + id).val();
+        var data={};
+        $("#soException_soExceptionDiv_info_" + id + " [soExceptionEdit='true']").each(function(index, element) {
+            data[$(this).attr("name")] = $(this).val();
+        });
+        var shipperNo =  $("#soException_shipperNo_"+id+" option:selected").val();
+        var  thirdWayBill = $("#soException_thirdWayBill_" + id).val();
+        data["shipperNo"]=shipperNo;
+        data["thirdWayBill"]=thirdWayBill;
+        data["id"]=$("#soException_info_errId_" + id).val();
+        data["soId"]=$("#soException_info_soId_" + id).val();
+        data["renewReason"]=$("#errReason").val();
+        data["errAddress"]=$("#errAddress").val();
+        data["disposeType"]=types1;
+        $.ajax({
+            url: "/exceptionCentre/batchTryResumeException.do?rand="+ Math.random(),
+            type: "post",
+            data: data,
+            dataType: "json",
+            success: function (result) {
+                if (result.code == 200) {
+                    bootbox.alert("success");
+                    $("#edit_basicModal_" + id).modal('hide');
+                    soExceptionCentre.reload();
+                } else {
+                    bootbox.alert(result.msg);
+                }
+
+            },
+            error: function () {
+                bootbox.alert("操作失败");
+                return;
+            }
+        });
+
+    }
+
+
+    function reDeal() {
+        var types = $("#soException_info_type_" + id).val();
+        var typeArr = types.split(',');
+        for(var i =0 ;i<typeArr.length;i++){
+            var type = typeArr[i];
+            if (type == 4) {
+                var data = {};
+                $("#soException_soExceptionDiv_info_" + id + " [soExceptionEdit='true']").each(function(index, element) {
+                    data[$(this).attr("name")] = $(this).val();
+                });
+                if ($.isEmptyObject(data)) {
+                    //$("#consigneeModal").modal('hide')
+                    bootbox.alert('订单信息无修改!');
+                    return;
+                }
+            } else if (type == 6) {
+                debugger;
+                var data = {};
+                var shipperNo =  $("#soException_shipperNo_"+id+" option:selected").val();
+                var oldShipperNo = $("#soMainDetail_shipperNo_"+id).val();
+                if(shipperNo==oldShipperNo){
+                    bootbox.alert('未更改承运商!');
+                    return false;
+                }
+                var  owner = $("#soInfo_info_owner_" + id).val();
+                var  thirdWayBill = $("#soException_thirdWayBill_" + id).val();
+                if(owner=='1'){
+                    if(thirdWayBill==''){
+                        bootbox.alert('三方运单号不能为空!');
+                        return false;
+                    }
+                }
+            } else if (type == 5) {
+
+                // 验证
+                var errAddress = $("#errAddress").val().trim();
+                if(errAddress==''){
+                    bootbox.alert("请填写青龙地址");
+                    return;
+                }
+            }
+        }
+        for(var i =0 ;i<typeArr.length;i++){
+            var type = typeArr[i];
+            if (type == 4) {
+                edit_so(type);
+                splice_arr(type, typeArr);
+            }
+        }
+        for(var i =0 ;i<typeArr.length;i++){
+            var type = typeArr[i];
+            if (type == 6) {
+                edit_ship(type);
+                splice_arr(type, typeArr);
+            }
+        }
+        for(var i =0 ;i<typeArr.length;i++){
+            var type = typeArr[i];
+            if (type == 5) {
+                edit_address(type);
+                splice_arr(type, typeArr);
+            }
+        }
+        for(var i =0 ;i<typeArr.length;i++){
+            var type = typeArr[i];
+            do_deal(type);
+        }
+    }
+
+
+    function splice_arr(type, typeArr) {
+        var index = $.inArray(type, typeArr);
+        typeArr.splice(index, 1);
+    }
+
+    function edit_so(disposeType) {
+        var data = {};
+        $("#soException_soExceptionDiv_info_" + id + " [soExceptionEdit='true']").each(function(index, element) {
+            data[$(this).attr("name")] = $(this).val();
+        });
+        if ($.isEmptyObject(data)) {
+            //$("#consigneeModal").modal('hide')
+            bootbox.alert('订单信息无修改!');
+            return;
+        } else {
+            data["id"]=$("#soException_info_errId_" + id).val();
+            data["soId"]=$("#soException_info_soId_" + id).val();
+            data["disposeType"]=disposeType;
+            $.ajax({
+                url: "/exceptionCentre/tryResumeException.do?rand="+ Math.random(),
+                type: "post",
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function (result) {
+                    /*bootbox.alert("success");
+                    if(result.success){
+                        $("#edit_basicModal_" + id).modal('hide');
+                        soExceptionCentre.reload();
+                        return;
+                    }*/
+                    if (result.code == 200) {
+                    } else {
+                        bootbox.alert(result.msg);
+                    }
+
+                },
+                error: function () {
+                    bootbox.alert("操作失败");
+                    return;
+                }
+            });
+        }
+    }
+
+    function edit_ship(disposeType) {
+        debugger;
+        var data = {};
+        var shipperNo =  $("#soException_shipperNo_"+id+" option:selected").val();
+        var oldShipperNo = $("#soMainDetail_shipperNo_"+id).val();
+        if(shipperNo==oldShipperNo){
+            bootbox.alert('未更改承运商!');
+            return false;
+        }
+        var  owner = $("#soInfo_info_owner_" + id).val();
+        var  thirdWayBill = $("#soException_thirdWayBill_" + id).val();
+        if(owner=='1'){
+            if(thirdWayBill==''){
+                bootbox.alert('三方运单号不能为空!');
+                return false;
+            }
+        }
+        data["shipperNo"]=shipperNo;
+        data["thirdWayBill"]=thirdWayBill;
+        data["id"]=$("#soException_info_errId_" + id).val();
+        data["soId"]=$("#soException_info_soId_" + id).val();
+        data["disposeType"]=disposeType;
+        $.ajax({
+            url: "/exceptionCentre/tryResumeException.do?rand="+ Math.random(),
+            type: "post",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                /*bootbox.alert(result.tipMsg);
+                if(result.success){
+                    $("#editShipModal_" + soNoTemp).modal('hide');
+                    soExceptionCentre.reload();
+                    return true;
+                }*/
+                if (result.code == 200) {
+
+                } else {
+                    bootbox.alert(result.msg);
+                }
+
+            },
+            error: function () {
+                bootbox.alert("操作失败");
+                return false;
+            }
+        });
+    }
+
+    function edit_address(disposeType) {
+        var data={};
+        data["id"]=$("#soException_info_errId_" + id).val();
+        data["soId"]=$("#soException_info_soId_" + id).val();
+        data["renewReason"]=$("#errAddress").val();
+        data["disposeType"]=disposeType;
+        $.ajax({
+            url: "/exceptionCentre/tryResumeException.do?rand="+ Math.random(),
+            type: "post",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                /*bootbox.alert("success");
+                if(result.success){
+                    $("#edit_basicModal_" + id).modal('hide');
+                    soExceptionCentre.reload();
+                    return;
+                }*/
+                if (result.code == 200) {
+                } else {
+                    bootbox.alert(result.msg);
+                }
+
+            },
+            error: function () {
+                bootbox.alert("操作失败");
+                return;
+            }
+        });
+    }
+    function do_deal(disposeType) {
+        var data={};
+        data["id"]=$("#soException_info_errId_" + id).val();
+        data["soId"]=$("#soException_info_soId_" + id).val();
+        data["renewReason"]=$("#errReason").val();
+        data["disposeType"]=disposeType;
+        $.ajax({
+            url: "/exceptionCentre/tryResumeException.do?rand="+ Math.random(),
+            type: "post",
+            data: data,
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                /*bootbox.alert("success");
+                if(result.success){
+                    $("#edit_basicModal_" + id).modal('hide');
+                    soExceptionCentre.reload();
+                    return;
+                }*/
+                bootbox.alert("success");
+                if (result.code == 200) {
+                    $("#edit_basicModal_" + id).modal('hide');
+                    soExceptionCentre.reload();
+                } else {
+                    bootbox.alert(result.msg);
+                }
+
+            },
+            error: function () {
+                bootbox.alert("操作失败");
+                return;
+            }
+        });
+    }
+
+
+    function redeveliver(obj) {
+        debugger;
+        alert(1);
+        var soId = $(obj).attr("soId");
+        var soNo = "CSL" + soId;
+        var wbNo = $("#soMainDetail_wayBill_"+soNo).val();
+        var pauseTime = $(obj).attr("pauseTime");
+        bootbox.dialog({
+            size: "small",
+            title: "协商再投",
+            message: "<table style='border-collapse:separate; border-spacing:1px 2px;'>" +
+                "                    <tr>" +
+                "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>订单号：</div></span><div  style='width: 170px;'><input  class='form-control' value='"+soNo+"' readonly /></div></div></td>" +
+                "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>运单号：</div></span><div  style='width: 185px;'><input  class='form-control' value='"+wbNo+"' readonly /></div></div></td>" +
+                "                    </tr>" +
+                "                    <tr>" +
+                "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>审核结果：</div></span><div>" +
+                "                            <select  class='form-control' id='deliverAgainType_"+soId+"' style='width: 170px;'><option value=''>请选择</option><option value='2'>再次投递</option><option value='1'>拒收退回</option></select></div></div></td>" +
+                "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>申请时间：</div></span><div  style='width: 185px;'><input  class='form-control' value='"+pauseTime+"' readonly /></div></div></td>" +
+                "                    </tr>" +
+                "                    <tr>" +
+                "                        <td colspan='2'><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>审核意见：</div></span><div><textarea id='errReason_"+soId+"' class='form-control' rows='3' placeholder='审核意见必填' style='width: 465px;'></textarea></div></div></td>" +
+                "                    </tr>" +
+                "                </table>",
+            buttons: {
+                confirm: {
+                    label: '保存',
+                    className: 'btn-primary',
+                    callback: function() {
+
+                        var deliverAgainType = $("#deliverAgainType_"+soId+" option:selected").val();
+                        if(deliverAgainType==''){
+                            bootbox.alert("请选择审核结果");
+                            return false;
+                        }
+
+                        // 验证
+                        var errReson = $("#errReason_"+soId).val().trim();
+                        if(errReson==''){
+                            bootbox.alert("请填写审核意见");
+                            return false;
+                        }
+
+                        var data={};
+                        data["id"]=$(obj).attr("errId");
+                        data["soId"]=$(obj).attr("soId");
+                        data["renewReason"]=errReson;
+                        data["disposeType"]=$("#soException_info_type_" + id).val();
+                        data["deliverAgainType"]=deliverAgainType;
+                        $.ajax({
+                            url: "soExceptionCentre/tryResumeException.do?rand="+ Math.random(),
+                            type: "post",
+                            data: data,
+                            dataType: "json",
+                            success: function (result) {
+                                bootbox.alert(result.tipMsg+"", function(){if(result.success){ soExceptionCentre.reload();}});
+                                return;
+                            },
+                            error: function () {
+                                bootbox.alert("操作失败");
+                                return;
+                            }
+                        });
+                    }
+                },
+                cancel: {
+                    label: '取消',
+                    className: 'btn-default',
+                    callback: function() {
+                        return;
+                    }
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 清空商下拉框
+     * @param soNo
+     */
+    var resetShippers = function(soNo){
+        $("#soException_shipperNo_"+soNo).empty();
+        $("#soException_shipperNo_"+soNo).prepend("<option value=''>加载中，稍后</option>");
+    };
+
+    /**
+     * 获取可修改的承运商
+     */
+    var queryShippersBySoNo = function (soNo) {
+        var data = {};
+        data["soNo"]=soNo;
+        $.ajax({
+            url: "/exceptionCentre/queryShippersBySoNo.do?rand="+ Math.random(),
+            type: "post",
+            data: data,
+            dataType: "json",
+            success: function (result) {
+                if(result.code == 200){
+                    $("#soException_shipperNo_"+soNo).empty();
+                    var dataList = result.data;
+                    for (i in dataList){
+                        var shipItem = dataList[i];
+                        var selectedTxt = "";
+                        if(shipItem.shipperNo==$("#soMainDetail_shipperNo_"+soNo).val()){
+                            selectedTxt = "selected";
+                            if(shipItem.performSystem=="1"){
+                                $("#soException_thirdWay_"+ id).show();
+                                $("#soInfo_owner_"+ id).val(1);
+                            }
+                        }
+                        $("#soException_shipperNo_"+soNo).prepend("<option rel-type='"+shipItem.performSystem+"' value='"+shipItem.shipperNo+"' "+selectedTxt+">"+shipItem.shipperName+"</option>");
+                    }
+                    return;
+                }else{
+                    bootbox.alert(result.msg);
+                }
+
+            },
+            error: function () {
+                bootbox.alert("读取承运商失败");
+                return;
+            }
+        });
+    };
+
+    function getCarrierDetail(value){
+        debugger;
+        var selectObj = $("#soException_shipperNo_"+ id).find("option:selected");
+        var shipType = selectObj.attr("rel-type");
+        if(shipType=="1") {
+            $("#soException_thirdWay_"+ id).show();
+            $("#soInfo_info_owner_"+ id).val(1);
+        }else{
+            $("#soException_thirdWay_"+id).hide();
+            $("#soInfo_info_owner_"+ id).val(0);
+        }
+    }
+
+
+
+
+    function buildExceptionType(billType) {
+        debugger;
+        $("#billexceptionExceptionCode").empty();
+        var options = "<option value=''>请选择</option>";
+        if(billType!=''){
+            $.ajax({
+                url: "/bill/getExceptionTypeByBillType?billType="+billType,
+                type: "get",
+                success: function (result) {
+                    if(result != null && result != "" && result != undefined){
+                        jQuery.each(result, function (i, param) {
+                            options += "<option value='" + param.code + "'>" + param.name + "</option>";
+                        });
+                    }
+                    $("#billexceptionExceptionCode").append(options);
+                },
+                error: function () {
+                    $("#billexceptionExceptionCode").append(options);
+                    bootbox.alert("操作失败");
+
+                }
+            });
+        }else{
+            $("#billexceptionExceptionCode").append(options);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //==================================================================================================================
+    //==================================================================================================================
+
+    var SoExceptionProcessBtn = function() {
+        var __self__;
+        SoExceptionProcessBtn.prototype.getInstance = function(full) {
+            debugger
+            __init__(full);
+            return __self__;
+        };
+
+        function __init__(full) {
+            debugger;
+            __self__ = document.createElement("div");
+            $(__self__).html("");
+            $(__self__).addClass("btn-group btn-group-sm");
+            $(__self__).append(__createButton__(full));
+        }
+
+        function __createButton__(full) {
+            debugger
+            var processBtnStr = full.processBtn;
+            var button = document.createElement("button");
+            $(button).attr("type", "button")
+            debugger;
+            if(full.errStatus == 1) {
+                debugger
+                if (typeof(processBtnStr) != "undefined" && processBtnStr != null) {
+                    debugger;
+                    var processBtn = $.parseJSON(processBtnStr);
+                    $(button).html(processBtn.errOperate + "&nbsp;");
+                    $(button).addClass("btn btn-warning");
+                    if (processBtn.errDisposes.length > 0) {
+                        $(button).append("<span class=\"caret\" ></span>")
+                        $(button).addClass("dropdown-toggle");
+                        $(button).attr("data-toggle", "dropdown");
+                        $(button).attr("aria-haspopup", "true");
+                        $(button).attr("aria-expanded", "false");
+                        var ul = document.createElement("ul");
+                        $(ul).addClass("dropdown-menu");
+                        for (i in processBtn.errDisposes) {
+                            $(ul).append(__createLi__(processBtn.errDisposes[i], full, processBtn.admin));
+                        }
+                        $(__self__).append(ul);
+                    }
+                } else {
+                    $(button).html("暂不支持处理");
+                    $(button).addClass("btn btn-danger");
+                }
+            }else if(full.errStatus == 2){
+                $(button).html("已处理");
+                $(button).addClass("btn btn-success");
+            }else if(full.errStatus == 3){
+                $(button).html("处理中");
+                $(button).addClass("btn btn-info");
+            }
+            return button;
+        }
+
+        function __createLi__(errDispose1, full, auth) {
+            var errDispose = $.parseJSON(errDispose1);
+            var li = document.createElement("li");
+            var a = document.createElement("a");
+            $(a).html(errDispose.name)
+            $(a).attr("soId", full.soId);
+            $(a).attr("errId", full.id);
+            $(a).attr("type", errDispose.type);
+            $(a).attr("tipMsg", errDispose.tipMsg);
+            $(a).attr("pauseTime", full.pauseTime);
+            if (auth) {
+                $(a).attr("href", "javascript:;");
+                $(a).attr("onclick", "javascript:deal(this)");
+            } else {
+                $(a).attr("href", "javascript:;");
+                $(a).attr("onclick", "bootbox.alert('无权限操作!');return false;");
+                $(a).css("opacity", "0.2");
+                $(a).attr("title", "无权限操作");
+
+            }
+
+            $(li).append(a);
+
+            return li;
+        }
+    };
+
+    function deal(obj) {
+        debugger;
+        var errorType = $(obj).attr("type");
+        if (errorType == 4) { //修改客户信息
+            $("#soException_errId_" + id).val($(obj).attr("errId"));
+            $("#soException_soId_" + id).val($(obj).attr("soId"));
+            $("#soException_type_" + id).val($(obj).attr("type"));
+            $("#consigneeModal_" + id).modal('show');
+        } else if ($(obj).attr("type") == 6) { //修改承运商信息
+            debugger;
+            $("#soException_ship_errId_" + id).val($(obj).attr("errId"));
+            $("#soException_ship_soId_" + id).val($(obj).attr("soId"));
+            $("#soException_ship_type_" + id).val($(obj).attr("type"));
+            // 清空承运商
+            //resetShippers(id);
+            $("#editShipModal_" + id).modal('show');
+            // 加载承运商
+            //queryShippersBySoNo(id);
+        }else if(errorType == 7){ // 协商再投
+            var soId = $(obj).attr("soId");
+            var soNo = "CSL" + soId;
+            var wbNo = $("#soMainDetail_wayBill_"+soNo).val();
+            var pauseTime = $(obj).attr("pauseTime");
+            bootbox.dialog({
+                size: "small",
+                title: "协商再投",
+                message: "<table style='border-collapse:separate; border-spacing:1px 2px;'>" +
+                    "                    <tr>" +
+                    "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>订单号：</div></span><div  style='width: 170px;'><input  class='form-control' value='"+soNo+"' readonly /></div></div></td>" +
+                    "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>运单号：</div></span><div  style='width: 185px;'><input  class='form-control' value='"+wbNo+"' readonly /></div></div></td>" +
+                    "                    </tr>" +
+                    "                    <tr>" +
+                    "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>审核结果：</div></span><div>" +
+                    "                            <select  class='form-control' id='deliverAgainType_"+soId+"' style='width: 170px;'><option value=''>请选择</option><option value='2'>再次投递</option><option value='1'>拒收退回</option></select></div></div></td>" +
+                    "                        <td><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>申请时间：</div></span><div  style='width: 185px;'><input  class='form-control' value='"+pauseTime+"' readonly /></div></div></td>" +
+                    "                    </tr>" +
+                    "                    <tr>" +
+                    "                        <td colspan='2'><div class='input-group'><span class='input-group-addon'><div style='width: 80px;'>审核意见：</div></span><div><textarea id='errReason_"+soId+"' class='form-control' rows='3' placeholder='审核意见必填' style='width: 465px;'></textarea></div></div></td>" +
+                    "                    </tr>" +
+                    "                </table>",
+                buttons: {
+                    confirm: {
+                        label: '保存',
+                        className: 'btn-primary',
+                        callback: function() {
+
+                            var deliverAgainType = $("#deliverAgainType_"+soId+" option:selected").val();
+                            if(deliverAgainType==''){
+                                bootbox.alert("请选择审核结果");
+                                return false;
+                            }
+
+                            // 验证
+                            var errReson = $("#errReason_"+soId).val().trim();
+                            if(errReson==''){
+                                bootbox.alert("请填写审核意见");
+                                return false;
+                            }
+
+                            var data={};
+                            data["id"]=$(obj).attr("errId");
+                            data["soId"]=$(obj).attr("soId");
+                            data["renewReason"]=errReson;
+                            data["disposeType"]=$(obj).attr("type");
+                            data["deliverAgainType"]=deliverAgainType;
+                            $.ajax({
+                                url: "soExceptionCentre/tryResumeException.do?rand="+ Math.random(),
+                                type: "post",
+                                data: data,
+                                dataType: "json",
+                                success: function (result) {
+                                    bootbox.alert(result.tipMsg+"", function(){if(result.success){ soExceptionCentre.reload();}});
+                                    return;
+                                },
+                                error: function () {
+                                    bootbox.alert("操作失败");
+                                    return;
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        className: 'btn-default',
+                        callback: function() {
+                            return;
+                        }
+                    }
+                }
+            });
+        } else {
+            bootbox.dialog({
+                size: "small",
+                title: "异常处理",
+                message: "<div class='form-group'><label for='name'>" + $(obj).attr("tipMsg") +
+                    "</label><textarea id='errReason' class='form-control' rows='3' placeholder='请输入恢复原因'></textarea></div>",
+                buttons: {
+                    confirm: {
+                        label: '确定',
+                        className: 'btn-primary',
+                        callback: function() {
+                            var data={};
+                            data["id"]=$(obj).attr("errId");
+                            data["soId"]=$(obj).attr("soId");
+                            data["renewReason"]=$("#errReason").val();
+                            data["disposeType"]=$(obj).attr("type");
+                            $.ajax({
+                                url: "soExceptionCentre/tryResumeException.do?rand="+ Math.random(),
+                                type: "post",
+                                data: data,
+                                dataType: "json",
+                                success: function (result) {
+                                    bootbox.alert(result.tipMsg+"", function(){if(result.success){ soExceptionCentre.reload();}});
+                                    return;
+                                },
+                                error: function () {
+                                    bootbox.alert("操作失败");
+                                    return;
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: '取消',
+                        className: 'btn-default',
+                        callback: function() {
+                            return;
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    //==================================================================================================================
+    //==================================================================================================================
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

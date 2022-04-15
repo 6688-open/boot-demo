@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用  户  注  册</title>
+</head>
+<!--公共js  css-->
+<script th:src="@{/static/common/common.js}" ></script>
+<style>
+    .error{
+        color:red;
+    }
+</style>
+<body>
+
+<center>
+    <!--导航栏 end  class="btn-group"-->
+    <div style="margin-top:20px;">
+        <form class="form-horizontal" role="form" id="fm">
+
+            <div class="panel panel-primary" style="margin-bottom: 40px;">
+
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#registerPanel">
+                            用  户  注  册
+                        </a>
+                    </h2>
+                </div>
+
+                <div class="btn-group" style="margin-bottom: 40px; margin-top: 30px">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <div style="width: 100px;">用户姓名:</div>
+                                    </span>
+                                    <div>
+                                        <input id="userName" name="userName" type="text" placeholder="用户名/手机号/邮箱"/>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <div style="width: 100px;">输入密码:</div>
+                                    </span>
+                                    <div>
+                                        <input id="password" name="password" type="password" placeholder="密码"/>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <div style="width: 100px;">确认密码:</div>
+                                    </span>
+                                    <div>
+                                        <input id="password1" name="password1" type="password" placeholder="确认密码"/>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <div style="width: 100px;">手机号码:</div>
+                                    </span>
+                                    <div>
+                                        <input id="phone" name="phone" type="text" placeholder="手机号" maxlength="11"/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <input class="btn btn-danger" type="button" value="获取短信验证码" onclick="getKey()" id="code"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <div style="width: 100px;">填写邮箱:</div>
+                                    </span>
+                                    <div>
+                                        <input id="email" name="email" type="text" placeholder="邮箱"/>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <div style="width: 100px;">性别:</div>
+                                    </span>
+                                    <div>
+                                        <input id="sex" name="sex" type="radio" value="1">     男
+                                        <input name="sex" type="radio" value="2">     女
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <p>
+                        <input class="btn btn-primary eo-gap" type="submit" value="确认注册">
+                        <a href="toLogin" class="btn btn-warning">已有账号?前去登录</a> <!--后台方法跳到login页面-->
+                    </p>
+                </div>
+                <input id="data" name="data" type="text" />
+            </div>
+        </form>
+    </div>
+</center>
+</body>
+<script>
+
+    // 页面加载事件
+    $(function () {
+        /*bootstrap 标题可展开关闭*/
+        jQuery('.collapse').collapse();
+        // 在键盘按下并释放及提交后验证提交表单
+        $("#fm").validate({
+            errorPlacement: function(error,element) {
+                //将错误信息展示在父元素的后面
+                $(element).parent().after(error);
+            },
+            rules:{
+                /*对应input框的name值*/
+                userName: {
+                    required: true,
+                    minlength: 2,
+                    remote:{
+                        url:"/user/uniq",
+                        type:"post",
+                        data:{userName:function(){return $("#userName").val()}}
+                    }
+                },
+                password: {
+                    required: true,
+                    //rangelength:[6,14],
+                },
+                password1: {
+                    required: true,
+                    //rangelength:[6,14],
+                    equalTo: "#password" //输入值必须和 #passWord相同。
+                },
+                phone: {
+                    required: true,
+                    rangelength:[11,11],// 手机号必须是11位
+                    remote:{
+                        url:"/user/uniq",
+                        type:"post",
+                        data:{userName:function(){return $("#phone").val()}}
+                    }
+                },
+                email: {
+                    required: true,
+                    email: true ,//必须输入正确格式的电子邮件。
+                    remote:{
+                        url:"/user/uniq",
+                        type:"post",
+                        data:{userName:function(){return $("#email").val()}}
+                    }
+                },
+                sex:"required",
+                lever:"required",
+
+            },
+            messages:{
+                userName: {
+                    required: "请输入用户名",
+                    minlength: "用户名至少由2个字母/数字/汉字组成",
+                    remote:"用户名已存在,请重新注册"
+                },
+                password: {
+                    required: "请输入密码",
+                    // rangelength: "密码长度为 6-14 个字符",
+                },
+                password1: {
+                    required: "请输入确认密码",
+                    //rangelength: "密码长度为 6-14 个字符",
+                    equalTo: "两次密码输入不一致"
+                },
+                phone: {
+                    required: "请输入手机号密码",
+                    rangelength: "手机号必须是11位的整数",
+                    remote:"手机号密码已存在,请重新注册"
+                },
+                email: {
+                    required: "请输入邮箱",
+                    rangelength: "请输入正确的邮箱格式",
+                    remote:"邮箱已存在,请重新注册"
+                },
+                sex:"请选择性别",
+                lever:"请选择类型",
+            }
+        })
+    })
+
+
+    jQuery(function(jQuery) {
+        debugger;
+        $.ajax({
+            "type": "post",
+            "url": "/detail/getData",
+            "dataType": "json",
+            data: {
+                id: "12144_3_4000"
+            },
+            success: function (data) {
+                $("#data").val(data.data);
+            }
+        });
+    });
+
+
+    $.validator.setDefaults({
+        submitHandler: function(form) {
+            debugger;
+
+            var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？%]");
+
+            var result = $("#userName").val().match(pattern);
+
+            if(result){
+                layer.msg("分类名称中含有特殊字符", {icon: 5,time:1000});
+                return false;
+            }
+            var loading = layer.load();
+            var password = md5($("#password").val());
+            $("#password").val(password);
+            $.post(
+                "/user/register",
+                $("#fm").serialize(),
+                function(data){
+                    if (data.code === 203 || data.code === 204 || data.code === 205) {
+                        var index1 = layer.load();
+                        if(data.code === 205){
+                            layer.close(index1);
+                            window.location.href = "/toLogin";
+                            layer.msg("注册成功", {icon: 6,time:1000})
+                            return;
+                        }
+                        /*注册成功  图片保存成功  上传成功  是否激活*/
+                        layer.confirm('注册成功,是否去激活', {
+                            btn: ['确认', '取消'],
+                            btn1: function(index, layero){
+                                layer.close(index);
+                                if (data.code == 203) {
+                                    layer.close(index1);
+                                    window.location.href = "https://mail.163.com";
+                                    layer.msg("163发送成功", {icon: 6,time:1000})
+                                    return;
+                                }
+                                layer.close(index1);
+                                window.location.href = "https://mail.qq.com";
+                                layer.msg("qq发送成功", {icon: 6,time:1000})
+
+
+                            },
+                            btn2:function(index, layero){
+                                $("#pwd").val("");
+                                window.location.href = "/toLogin";
+                                layer.close(index1);
+                                return;
+                            }
+                        })
+
+                        return;
+                    }
+                    layer.close(loading);
+                    layer.msg("失败网络异常", {icon: 5,time:1000});
+                }
+            );
+        }
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

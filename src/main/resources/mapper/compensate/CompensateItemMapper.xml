@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dj.boot.mapper.compensate.CompensateItemMapper">
+  <resultMap id="BaseResultMap" type="com.dj.boot.pojo.compensate.CompensateItem">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="compensate_id" jdbcType="BIGINT" property="compensateId" />
+    <result column="claim_id" jdbcType="VARCHAR" property="claimId" />
+    <result column="item_status" jdbcType="INTEGER" property="itemStatus" />
+    <result column="payment_real_money" jdbcType="DECIMAL" property="paymentRealMoney" />
+    <result column="good_owner" jdbcType="INTEGER" property="goodOwner" />
+    <result column="good_owner_name" jdbcType="VARCHAR" property="goodOwnerName" />
+    <result column="first_claim_cause" jdbcType="VARCHAR" property="firstClaimCause" />
+    <result column="second_claim_cause" jdbcType="VARCHAR" property="secondClaimCause" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="yn" jdbcType="TINYINT" property="yn" />
+    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <trim prefix="" suffix="" suffixOverrides=",">
+      id,
+      compensate_id,
+      claim_id,
+      item_status,
+      payment_real_money,
+      good_owner,
+      good_owner_name,
+      first_claim_cause,
+      second_claim_cause,
+      create_time,
+      update_time,
+      create_user,
+      update_user,
+      yn,
+    </trim>
+  </sql>
+
+  <!--根据条件获取-->
+  <select id="getCompensateItemList"  resultMap="BaseResultMap">
+    select
+        <include refid="Base_Column_List" />
+    from compensate_item
+        <include refid="whereCondition"/>
+  </select>
+
+  <sql id="whereCondition">
+    <where>
+      yn=1
+      <if test="condition.id != null and condition.id != '' ">
+        <![CDATA[ and id = #{condition.id,jdbcType=BIGINT} ]]>
+      </if>
+      <if test="condition.compensateId != null and condition.compensateId != '' ">
+        <![CDATA[ and compensate_id = #{condition.compensateId,jdbcType=BIGINT} ]]>
+      </if>
+      <if test="condition.claimId != null and condition.claimId != ''">
+        <![CDATA[ and claim_id = #{condition.claimId,jdbcType=VARCHAR} ]]>
+      </if>
+      <if test="condition.itemStatus != null and condition.itemStatus != '' ">
+        <![CDATA[ and item_status = #{condition.itemStatus,jdbcType=INTEGER} ]]>
+      </if>
+    </where>
+  </sql>
+
+  <!--根据id查询-->
+  <select id="getCompensateItem" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+        <include refid="Base_Column_List" />
+    from compensate_item
+    where id = #{id,jdbcType=BIGINT} and yn = 1
+  </select>
+  <!-- 删除实体 -->
+  <update id="deleteCompensateItem" parameterType="java.lang.Long">
+    update compensate_item
+      <set>
+        yn=0
+      </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insertCompensateItem" parameterType="com.dj.boot.pojo.compensate.CompensateItem">
+    insert into compensate_item
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        id,
+        compensate_id,
+        claim_id,
+        item_status,
+        payment_real_money,
+        good_owner,
+        good_owner_name,
+        first_claim_cause,
+        second_claim_cause,
+        create_time,
+        update_time,
+        create_user,
+        update_user,
+        yn,
+      </trim>
+    values
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        #{id,jdbcType=BIGINT},
+        #{compensateId,jdbcType=BIGINT},
+        #{claimId,jdbcType=VARCHAR},
+        #{itemStatus,jdbcType=INTEGER},
+        #{paymentRealMoney,jdbcType=DECIMAL},
+        #{goodOwner,jdbcType=INTEGER},
+        #{goodOwnerName,jdbcType=VARCHAR},
+        #{firstClaimCause,jdbcType=VARCHAR},
+        #{secondClaimCause,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{createUser,jdbcType=VARCHAR},
+        #{updateUser,jdbcType=VARCHAR},
+        #{yn,jdbcType=TINYINT},
+      </trim>
+  </insert>
+  <insert id="insertSelectiveCompensateItem" parameterType="com.dj.boot.pojo.compensate.CompensateItem">
+    insert into compensate_item
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+          id,
+        </if>
+        <if test="compensateId != null">
+          compensate_id,
+        </if>
+        <if test="claimId != null">
+          claim_id,
+        </if>
+        <if test="itemStatus != null">
+          item_status,
+        </if>
+        <if test="paymentRealMoney != null">
+          payment_real_money,
+        </if>
+        <if test="goodOwner != null">
+          good_owner,
+        </if>
+        <if test="goodOwnerName != null">
+          good_owner_name,
+        </if>
+        <if test="firstClaimCause != null">
+          first_claim_cause,
+        </if>
+        <if test="secondClaimCause != null">
+          second_claim_cause,
+        </if>
+        <if test="createTime != null">
+          create_time,
+        </if>
+        <if test="updateTime != null">
+          update_time,
+        </if>
+        <if test="createUser != null">
+          create_user,
+        </if>
+        <if test="updateUser != null">
+          update_user,
+        </if>
+        <if test="yn != null">
+          yn,
+        </if>
+        <if test="ts != null">
+          ts,
+        </if>
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="id != null">
+          #{id,jdbcType=BIGINT},
+        </if>
+        <if test="compensateId != null">
+          #{compensateId,jdbcType=BIGINT},
+        </if>
+        <if test="claimId != null">
+          #{claimId,jdbcType=VARCHAR},
+        </if>
+        <if test="itemStatus != null">
+          #{itemStatus,jdbcType=INTEGER},
+        </if>
+        <if test="paymentRealMoney != null">
+          #{paymentRealMoney,jdbcType=DECIMAL},
+        </if>
+        <if test="goodOwner != null">
+          #{goodOwner,jdbcType=INTEGER},
+        </if>
+        <if test="goodOwnerName != null">
+          #{goodOwnerName,jdbcType=VARCHAR},
+        </if>
+        <if test="firstClaimCause != null">
+          #{firstClaimCause,jdbcType=VARCHAR},
+        </if>
+        <if test="secondClaimCause != null">
+          #{secondClaimCause,jdbcType=VARCHAR},
+        </if>
+        <if test="createTime != null">
+          #{createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="updateTime != null">
+          #{updateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="createUser != null">
+          #{createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="updateUser != null">
+          #{updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="yn != null">
+          #{yn,jdbcType=TINYINT},
+        </if>
+        <if test="ts != null">
+          #{ts,jdbcType=TIMESTAMP},
+        </if>
+      </trim>
+  </insert>
+  <update id="updateCompensateItem" parameterType="com.dj.boot.pojo.compensate.CompensateItem">
+    update compensate_item
+      <set>
+        <if test="compensateId != null">
+          compensate_id = #{compensateId,jdbcType=BIGINT},
+        </if>
+        <if test="claimId != null">
+          claim_id = #{claimId,jdbcType=VARCHAR},
+        </if>
+        <if test="itemStatus != null">
+          item_status = #{itemStatus,jdbcType=INTEGER},
+        </if>
+        <if test="paymentRealMoney != null">
+          payment_real_money = #{paymentRealMoney,jdbcType=DECIMAL},
+        </if>
+        <if test="goodOwner != null">
+          good_owner = #{goodOwner,jdbcType=INTEGER},
+        </if>
+        <if test="goodOwnerName != null">
+          good_owner_name = #{goodOwnerName,jdbcType=VARCHAR},
+        </if>
+        <if test="firstClaimCause != null">
+          first_claim_cause = #{firstClaimCause,jdbcType=VARCHAR},
+        </if>
+        <if test="secondClaimCause != null">
+          second_claim_cause = #{secondClaimCause,jdbcType=VARCHAR},
+        </if>
+        <if test="createTime != null">
+          create_time = #{createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="updateTime != null">
+          update_time = #{updateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="createUser != null">
+          create_user = #{createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="updateUser != null">
+          update_user = #{updateUser,jdbcType=VARCHAR},
+        </if>
+        <if test="yn != null">
+          yn = #{yn,jdbcType=TINYINT},
+        </if>
+        <if test="ts != null">
+          ts = #{ts,jdbcType=TIMESTAMP},
+        </if>
+      </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

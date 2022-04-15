@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dj.boot.mapper.errorreason.ErrorReasonMapper" >
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.dj.boot.pojo.errorreason.ErrorReason" >
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="report_name" property="reportName" jdbcType="VARCHAR"/>
+        <result column="report_desc" property="reportDesc" jdbcType="VARCHAR"/>
+        <result column="parent_code" property="parentCode" jdbcType="BIGINT"/>
+        <result column="parent_name" property="parentName" jdbcType="VARCHAR"/>
+        <result column="error_level" property="errorLevel" jdbcType="TINYINT"/>
+        <result column="seq" property="seq" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="is_delete" property="isDelete" jdbcType="TINYINT"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="report_outer_no" property="reportOuterNo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        <trim suffix="" prefix="" suffixOverrides="," >
+            id,
+            report_name,
+            report_desc,
+            parent_code,
+            parent_name,
+            error_level,
+            seq,
+            status,
+            is_delete,
+            create_user,
+            update_user,
+            create_time,
+            update_time,
+            report_outer_no,
+        </trim>
+    </sql>
+
+    <!-- 根据id查询 工单 -->
+    <select id="getErrorReason"  resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List" />
+        from error_reason
+        where id = #{id,jdbcType=BIGINT} and is_delete = 1
+    </select>
+
+    <!-- 插入记录 -->
+    <insert id="insertErrorReason" >
+        insert into error_reason
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            report_name,
+            report_desc,
+            parent_code,
+            parent_name,
+            error_level,
+            seq,
+            status,
+            is_delete,
+            create_user,
+            update_user,
+            create_time,
+            update_time,
+            report_outer_no,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=BIGINT},
+            #{reportName,jdbcType=VARCHAR},
+            #{reportDesc,jdbcType=VARCHAR},
+            #{parentCode,jdbcType=BIGINT},
+            #{parentName,jdbcType=VARCHAR},
+            #{errorLevel,jdbcType=TINYINT},
+            #{seq,jdbcType=INTEGER},
+            #{status,jdbcType=TINYINT},
+            #{isDelete,jdbcType=TINYINT},
+            #{createUser,jdbcType=VARCHAR},
+            #{updateUser,jdbcType=VARCHAR},
+            now(),
+            now(),
+            #{reportOuterNo,jdbcType=VARCHAR},
+        </trim>
+    </insert>
+
+    <!-- 修改记录，只修改只不为空的字段 -->
+    <update id="updateErrorReason" >
+        update error_reason
+        <set>
+            <trim>
+                <if test="reportName != null and reportName != ''">
+                    report_name=#{reportName,jdbcType=VARCHAR},
+                </if>
+                <if test="reportDesc != null and reportDesc != ''">
+                    report_desc=#{reportDesc,jdbcType=VARCHAR},
+                </if>
+                <if test="parentCode != null and parentCode != ''">
+                    parent_code=#{parentCode,jdbcType=VARCHAR},
+                </if>
+                <if test="parentName != null  and parentName != ''">
+                    parent_name=#{parentName,jdbcType=VARCHAR},
+                </if>
+                <if test="errorLevel != null">
+                    error_level=#{errorLevel,jdbcType=TINYINT},
+                </if>
+                <if test="seq != null">
+                    seq=#{seq,jdbcType=INTEGER},
+                </if>
+                <if test="status != null">
+                    status=#{status,jdbcType=TINYINT},
+                </if>
+                <if test="updateUser != null and updateUser != ''">
+                    update_user=#{updateUser,jdbcType=VARCHAR},
+                </if>
+                <if test="reportOuterNo != null and reportOuterNo != ''">
+                    report_outer_no=#{reportOuterNo,jdbcType=VARCHAR},
+                </if>
+                update_time = now()
+
+            </trim>
+        </set>
+        where id=#{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 删除记录 -->
+    <update id="deleteErrorReason" parameterType="java.lang.Long">
+		update error_reason set is_delete = 0 where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+
+    <!-- 查询列表 -->
+    <select id="findErrorReasonListByCondition" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from error_reason
+        <where>
+            is_delete=1
+            <if test="po.id != null">
+                and id = #{po.id,jdbcType=BIGINT}
+            </if>
+            <if test="po.reportName != null and po.reportName != ''">
+                and report_name=#{po.reportName,jdbcType=VARCHAR}
+            </if>
+            <if test="po.reportDesc != null and po.reportName != ''">
+                and report_desc=#{po.reportDesc,jdbcType=VARCHAR}
+            </if>
+            <if test="po.parentCode != null">
+                and parent_code=#{po.parentCode,jdbcType=BIGINT}
+            </if>
+            <if test="po.parentName != null  and po.parentName != ''">
+                and parent_name=#{po.parentName,jdbcType=VARCHAR}
+            </if>
+            <if test="po.errorLevel != null">
+                and error_level=#{po.errorLevel,jdbcType=TINYINT}
+            </if>
+            <if test="po.seq != null">
+                and seq=#{po.seq,jdbcType=INTEGER}
+            </if>
+            <if test="po.status != null">
+                and status=#{po.status,jdbcType=TINYINT}
+            </if>
+        </where>
+    </select>
+
+</mapper>
