@@ -1,6 +1,7 @@
 package com.dj.boot.configuration.okhttp3.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
 import com.dj.boot.combine.handler.enums.PddTemplateConstants;
 import com.dj.boot.common.util.json.JsonUtil;
 import com.dj.boot.configuration.okhttp3.selector.support.IMethodExecutor;
@@ -44,9 +45,10 @@ public class PddInterceptor implements HttpExecutorInterceptor {
             String originBody = (String) parsedHeader.get(PddTemplateConstants.ORIGIN_REQUEST_BODY);
             parsedBody = JsonUtil.fromJson(originBody, new TypeReference<TreeMap<String, Object>>() {
             });
-            String targetBody = (String) parsedBody.get(PddTemplateConstants.WAY_BILL_PARAM);
+            String targetBody = JSONObject.toJSONString(parsedBody.get(PddTemplateConstants.WAY_BILL_PARAM));
             parsedBody = JsonUtil.fromJson(targetBody, new TypeReference<TreeMap<String, Object>>() {
             });
+            //parsedBody = (Map<String, Object>) parsedBody.get(PddTemplateConstants.WAY_BILL_PARAM);
         }
         String appSecret = (String) parsedHeader.get(PddTemplateConstants.CLIENT_SECRET);
         // parsedBody排序，嵌套排序

@@ -195,6 +195,9 @@ public class UserController extends BaseController implements EmbeddedValueResol
 
     private StringValueResolver stringValueResolver;
 
+    @Resource(name = "testKeyConfig")
+    private Map<Integer, String> testKeyConfig;
+
 
 
     /**
@@ -288,6 +291,12 @@ public class UserController extends BaseController implements EmbeddedValueResol
     @ApiOperation(value = "测试")
     @PostMapping("echo")
     public Response<User> echo(@RequestBody User user) throws Exception {
+
+        String configStr = testKeyConfig.get(1);
+        String[] splits = configStr.split(",");
+        logger.error("配置信息:{},{}",splits[0], splits[1]);
+
+
         String topic = stringValueResolver.resolveStringValue("${ip00001}");
 
         /*适配模式*/

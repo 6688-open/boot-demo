@@ -30,6 +30,7 @@
     <!--<import resource="classpath:/spring/spring-dispatch-proxy.xml"/>-->
 
     <import resource="classpath:/spring/beans.xml"/>
+    <import resource="classpath:spring/key-config.xml"/>
     <import resource="classpath:/spring/spring-bean.xml"/>
     <import resource="classpath:/spring/spring-sequence.xml"/>
     <import resource="classpath:/spring/dateConverter.xml"/>

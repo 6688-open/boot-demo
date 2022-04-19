@@ -80,6 +80,7 @@ public class PddCombineHandler implements CombineService {
 
     private Result<String> buildPddV2Token(String param, String bizNo, String deptNo, Integer bizType) {
         try {
+            param = "{\"param_request\":{\"need_encrypt\":true,\"sender\":{\"address\":{\"city\":\"市\",\"country\":\"CN\",\"detail\":\"路五方\",\"district\":\"曙区\",\"province\":\"江省\",\"town\":\"\"},\"mobile\":\"18351867657\",\"name\":\"TTTTT\",\"phone\":\"18351867657\"},\"order_info_dtos\":[{\"object_id\":\"416906705\",\"order_info\":{\"channels_type\":\"PDD\",\"order_list\":[\"CD0044\"]},\"package_info\":{\"items\":[{\"count\":1,\"name\":\"纸尿裤\"},{\"count\":1,\"name\":\"卫生巾\"}],\"packages_count\":1,\"weight\":1},\"recipient\":{\"address\":{\"city\":\"北京市\",\"country\":\"CN\",\"detail\":\"欢口镇还口村\",\"district\":\"大兴区\",\"province\":\"北京\"},\"mobile\":\"10086\",\"name\":\"小三\",\"phone\":\"10086\"},\"template_url\":\"https://baxitv.com\",\"user_id\":2986}],\"wp_code\":\"SFJT\"}}";
             Map<String, Object> header = buildPddV2Header(deptNo, null);
             header.put(PddTemplateConstants.ORIGIN_REQUEST_KEY, PddTemplateConstants.ORIGIN_REQUEST_KEY_1);
             header.put(PddTemplateConstants.ORIGIN_REQUEST_BODY, param);
