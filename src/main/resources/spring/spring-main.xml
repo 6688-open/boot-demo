@@ -35,6 +35,7 @@
     <import resource="classpath:/spring/spring-sequence.xml"/>
     <import resource="classpath:/spring/dateConverter.xml"/>
     <import resource="classpath:/spring/spring-feedback.xml"/>
+    <import resource="classpath:/spring/spring-component.xml"/>
 
     <!--permission start-->
     <import resource="classpath:spring/permission/spring-config-login.xml"/>

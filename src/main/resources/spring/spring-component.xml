@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:kernel="http://com.dj.boot/schema/kernel"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    	http://com.dj.boot/schema/kernel
+        http://com.dj.boot/schema/kernel.xsd"
+       default-lazy-init="false" default-autowire="byName">
+
+    <!--最后执行的Component节点-->
+    <kernel:component id="endResultComponent" class="com.dj.boot.stock.response.EndResultComponent"/>
+    <!--使用ResponseException异常编码与话述的异常返回-->
+    <kernel:component id="responseExceptionComponent" class="com.dj.boot.stock.execption.ResponseExceptionComponent"/>
+
+    <!--执行业务逻辑-->
+    <kernel:component id="groupParametersComponent" class="com.dj.boot.stock.component.GroupParametersComponent" />
+    <kernel:component id="shopStockComponent" class="com.dj.boot.stock.component.ShopStockComponent" />
+
+
+    <kernel:sequence id="operationStockSequence" class="com.dj.boot.configuration.kernel.sequence.impl.SimpleSequence"
+                     exceptionComponent="responseExceptionComponent"  endComponent="endResultComponent">
+        <kernel:componentChain>
+            <kernel:component ref="groupParametersComponent"/>
+            <kernel:component ref="shopStockComponent"/>
+        </kernel:componentChain>
+    </kernel:sequence>
+
+</beans>

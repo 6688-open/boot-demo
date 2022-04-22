@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns="http://com.dj.boot/schema/kernel"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:tool="http://www.springframework.org/schema/tool"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            elementFormDefault="qualified"
+            targetNamespace="http://com.dj.boot/schema/kernel">
+
+    <xsd:annotation>
+        <xsd:documentation><![CDATA[ Namespace support for the WJ Service Framework ]]></xsd:documentation>
+    </xsd:annotation>
+    <!-- RegistryConfig -->
+    <xsd:element name="component">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ 注册组件 ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:ID" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ Spring的BeanId 和 组件ID]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="class" type="xsd:string" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 类名 ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="filterChain" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 拦截器  ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="postWorkChain" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 拦截器  ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="validatorChain" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 拦截器  ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="sequence">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ 注册流程 ]]></xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="componentChain">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="component" minOccurs="1" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:attribute name="ref" type="xsd:string" use="required">
+                                        <xsd:annotation>
+                                            <xsd:documentation><![CDATA[ Spring的BeanId 和 组件ID]]></xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:attribute>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:ID" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ Spring的BeanId 和 组件ID]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="class" type="xsd:string" use="required">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 类名 ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+
+            <xsd:attribute name="exceptionComponent" type="xsd:string" default="exceptionComponent">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 异常处理 ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="endComponent" type="xsd:string" default="endResultComponent">
+                <xsd:annotation>
+                    <xsd:documentation><![CDATA[ 结果处理 ]]></xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

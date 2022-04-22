@@ -2,6 +2,7 @@ package com.dj.boot.test;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dj.boot.btp.exception.SafJosExceptionBuilder;
+import com.dj.boot.combine.dto.Result;
 import com.dj.boot.common.base.Response;
 import com.dj.boot.common.util.json.JsonUtil;
 import com.dj.boot.controller.base.BaseController;
@@ -14,6 +15,8 @@ import org.junit.Test;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -1063,8 +1066,38 @@ public class TestDemo extends BaseController {
     @Test
     public void test45(){
 
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("code", "");
+        Object code1 = map1.get("code");
+        String codeStr = "";
+        if (code1 != null) {
+            codeStr = code1.toString();
+        }
+        System.out.println(codeStr);
+
+        String s = "{\"code\":200,\"data\":\"{\\n    \\\"create_response\\\": {\\n        \\\"access_token\\\": \\\"16d4-e4f-8\\\",\\n        \\\"expires_at\\\": 0,\\n        \\\"expires_in\\\": 1000000,\\n        \\\"owner_id\\\": \\\"0000\\\",\\n        \\\"owner_name\\\": \\\"3号店\\\",\\n        \\\"r1_expires_at\\\": 0,\\n        \\\"expires_in\\\": 100000,\\n        \\\"r2_expires_at\\\": 0,\\n        \\\"r2_expires_in\\\": 100000,\\n        \\\"refresh_token\\\": \\\"28d4e4f8-a312-\\\",\\n        \\\"refresh_token_expires_at\\\": 0,\\n        \\\"refresh_token_expires_in\\\": 0,\\n        \\\"scope\\\": [\\n            \\\"str\\\"\\n        ],\\n        \\\"w1_expires_at\\\": 0,\\n        \\\"w1_expires_in\\\": 1000000,\\n        \\\"w2_expires_at\\\": 0,\\n        \\\"w2_expires_in\\\": 1000000\\n    }\\n}\",\"message\":\"成功\",\"success\":true}";
+        Result result = JSONObject.parseObject(s, Result.class);
+        String data = (String) result.getData();
+        Map parseObject = JSONObject.parseObject(data, Map.class);
+
+        JSONObject jsonObject = JSONObject.parseObject(s);
+        String dataStr = jsonObject.getString("data");
+        JSONObject jsonData = JSONObject.parseObject(dataStr);
+
+
         User user = new User();
         String wpCode = "4444444";
+        //获取token
+        String code = "{\"code\":\"code\",\"grant_type\":\"authorization_code\"}";
+        //刷新token
+        String refreshToken = "{\"refresh_token\":\"refreshToken\",\"grant_type\":\"refresh_token\"}";
+        //获取电子面单发货地址 shipNo
+        String wpCode1 = "{\"wp_code\":\"wpCode\"}";
+        //获取电子面单模板
+        String wpCode2 = "{\"wp_code\":\"wpCode\"}";
+        //获取自定义电子面单模板
+        String template = "{\"template_id\":\"templateId\"}";
+
         user.setUserName("{\"wp_code\":\"" + wpCode + "\"}");
 
         Map map = JSONObject.parseObject(user.getUserName(), Map.class);

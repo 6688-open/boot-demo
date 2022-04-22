@@ -1,1 +1,2 @@
 http\://com.dj.boot/schema/dispatch=com.dj.boot.configuration.dispatch.config.DispatchProxyNamespaceHandler
+http\://com.dj.boot/schema/kernel=com.dj.boot.configuration.kernel.config.KernelNamespaceHandler

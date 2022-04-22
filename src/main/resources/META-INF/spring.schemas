@@ -1,1 +1,2 @@
 http\://com.dj.boot/schema/dispatch.xsd=com/dj/boot/btp/dispatch/dispatch-proxy.xsd
+http\://com.dj.boot/schema/kernel.xsd=com/dj/boot/btp/kernel/kernel.xsd
