@@ -8,13 +8,16 @@
         http://com.dj.boot/schema/kernel.xsd"
        default-lazy-init="false" default-autowire="byName">
 
+    <!--日志插件-->
+    <kernel:component id="logFilterChain" class="com.dj.boot.stock.filter.LogFilterChain"/>
+
     <!--最后执行的Component节点-->
     <kernel:component id="endResultComponent" class="com.dj.boot.stock.response.EndResultComponent"/>
     <!--使用ResponseException异常编码与话述的异常返回-->
     <kernel:component id="responseExceptionComponent" class="com.dj.boot.stock.execption.ResponseExceptionComponent"/>
 
     <!--执行业务逻辑-->
-    <kernel:component id="groupParametersComponent" class="com.dj.boot.stock.component.GroupParametersComponent" />
+    <kernel:component id="groupParametersComponent" class="com.dj.boot.stock.component.GroupParametersComponent" filterChain="logFilterChain"/>
     <kernel:component id="shopStockComponent" class="com.dj.boot.stock.component.ShopStockComponent" />
 
 

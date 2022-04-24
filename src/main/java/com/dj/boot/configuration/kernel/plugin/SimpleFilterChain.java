@@ -1,6 +1,7 @@
 package com.dj.boot.configuration.kernel.plugin;
 
 import com.dj.boot.configuration.kernel.context.ComponentContext;
+import com.dj.boot.configuration.kernel.plugin.impl.LogFilterPlugin;
 import com.dj.boot.configuration.kernel.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ public class SimpleFilterChain implements IFilterChain {
 
     public SimpleFilterChain() {
         this.filterPlugins = new ArrayList<IFilterPlugin>();
-        //IFilterPlugin logFilter = new LogFilterPlugin();
-        //filterPlugins.add(logFilter);
+        /*IFilterPlugin logFilter = new LogFilterPlugin();
+        filterPlugins.add(logFilter);*/
     }
 
     /**
