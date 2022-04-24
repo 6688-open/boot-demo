@@ -1,7 +1,7 @@
 package com.dj.boot.configuration.kernel.config;
 
-import com.dj.boot.configuration.kernel.praser.ComponentPraser;
-import com.dj.boot.configuration.kernel.praser.SequencePraser;
+import com.dj.boot.configuration.kernel.praser.ComponentParser;
+import com.dj.boot.configuration.kernel.praser.SequenceParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -16,7 +16,7 @@ public class KernelNamespaceHandler extends NamespaceHandlerSupport {
     }
 
     public void init() {
-        this.registerBeanDefinitionParser("component", new ComponentPraser());
-        this.registerBeanDefinitionParser("sequence", new SequencePraser());
+        this.registerBeanDefinitionParser("component", new ComponentParser());
+        this.registerBeanDefinitionParser("sequence", new SequenceParser());
     }
 }

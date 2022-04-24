@@ -3,32 +3,37 @@ package com.dj.boot.configuration.kernel.praser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 /**
  * @ProjectName: demo
  * @Author: wangJia
  * @Date: 2022-04-22-10-35
  */
-public class ComponentPraser implements BeanDefinitionParser {
-    public ComponentPraser() {
+public class SequenceParser implements BeanDefinitionParser {
+    public SequenceParser() {
     }
 
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String className = element.getAttribute("class");
         if (StringUtils.isBlank(className)) {
-            throw new IllegalStateException("Component class is null");
+            throw new IllegalStateException("Sequence class is null");
         } else {
             Class classObj;
             try {
                 classObj = Class.forName(className);
-            } catch (ClassNotFoundException var17) {
+            } catch (ClassNotFoundException var23) {
                 throw new IllegalStateException("class NotFound:" + className);
             }
 
@@ -37,9 +42,9 @@ public class ComponentPraser implements BeanDefinitionParser {
             beanDefinition.setLazyInit(false);
             String id = element.getAttribute("id");
             if (StringUtils.isBlank(id)) {
-                throw new IllegalStateException("[component]This bean do not set spring bean id " + id);
+                throw new IllegalStateException("[sequence]This bean do not set spring bean id " + id);
             } else if (parserContext.getRegistry().containsBeanDefinition(id)) {
-                throw new IllegalStateException("[component]Duplicate spring bean id " + id);
+                throw new IllegalStateException("[sequence]Duplicate spring bean id " + id);
             } else {
                 parserContext.getRegistry().registerBeanDefinition(id, beanDefinition);
                 Method[] arr$ = classObj.getMethods();
@@ -58,7 +63,7 @@ public class ComponentPraser implements BeanDefinitionParser {
                                 if (StringUtils.isNotBlank(value)) {
                                     BeanDefinition refBean = parserContext.getRegistry().getBeanDefinition(value);
                                     if (!refBean.isSingleton()) {
-                                        throw new IllegalStateException("[component]The exported service ref " + value + " must be singleton! Please set the " + value + " bean scope to singleton, eg: <bean id=\"" + value + "\" scope=\"singleton\" ...>");
+                                        throw new IllegalStateException("[sequence]The exported service ref " + value + " must be singleton! Please set the " + value + " bean scope to singleton, eg: <bean id=\"" + value + "\" scope=\"singleton\" ...>");
                                     }
 
                                     reference = new RuntimeBeanReference(value);
@@ -72,6 +77,25 @@ public class ComponentPraser implements BeanDefinitionParser {
                                 if (StringUtils.isNotBlank(value)) {
                                     beanDefinition.getPropertyValues().addPropertyValue(property, value);
                                 }
+                                break;
+                            case 3:
+                                NodeList nodeList = element.getElementsByTagName("kernel:" + property);
+                                if (nodeList != null && nodeList.getLength() >= 1) {
+                                    NodeList childNodes = nodeList.item(0).getChildNodes();
+                                    List list = new ManagedList();
+                                    int i = 0;
+                                    int j = childNodes.getLength();
+
+                                    for(; i < j; ++i) {
+                                        Node node = childNodes.item(i);
+                                        NamedNodeMap namedNodeMap = node.getAttributes();
+                                        if (null != namedNodeMap && namedNodeMap.getLength() >= 1) {
+                                            list.add(new RuntimeBeanReference(namedNodeMap.item(0).getNodeValue()));
+                                        }
+                                    }
+
+                                    beanDefinition.getPropertyValues().addPropertyValue(property, list);
+                                }
                         }
                     }
                 }
@@ -83,12 +107,12 @@ public class ComponentPraser implements BeanDefinitionParser {
 
     private int getPropertyType(String propertyName) {
         byte type = -1;
-        if ("filterChain".equals(propertyName)) {
+        if ("exceptionComponent".equals(propertyName)) {
             type = 1;
-        } else if ("postWorkChain".equals(propertyName)) {
+        } else if ("endComponent".equals(propertyName)) {
             type = 1;
-        } else if ("validatorChain".equals(propertyName)) {
-            type = 1;
+        } else if ("componentChain".equals(propertyName)) {
+            type = 3;
         } else if ("id".equals(propertyName)) {
             type = 2;
         }
