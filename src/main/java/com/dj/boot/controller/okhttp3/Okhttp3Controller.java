@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -103,6 +105,9 @@ public class Okhttp3Controller {
         logger.error("header信息:{}", JSONObject.toJSONString(headers));
         logger.error("user信息:{}", JSONObject.toJSONString(user));
         Response<User>  response = Response.success();
+        String param_request = user.getParam_request();
+        String decode = URLDecoder.decode(param_request, "UTF-8");
+        user.setParam_request(decode);
         response.setData(user);
         return response;
     }

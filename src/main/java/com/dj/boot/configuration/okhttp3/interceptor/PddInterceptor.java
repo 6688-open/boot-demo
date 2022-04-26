@@ -64,6 +64,10 @@ public class PddInterceptor implements HttpExecutorInterceptor {
         // 构建URL
         String requestUrl = String.valueOf(parsedHeader.get(PddTemplateConstants.CLIENT_URL));
         builder.url(requestUrl);
+        /*requestUrl = requestUrl + "?" + sortAndJoin(requestParam);
+        LOGGER.error("PddV2Interceptor requestUrl:{}", requestUrl);
+        requestUrl = requestUrl + "?" + getQueryString(requestParam);
+        LOGGER.error("PddV2Interceptor requestUrl:{}", requestUrl);*/
         Map<String, String> headers = JsonUtil.fromJson(header, new TypeReference<HashMap<String, Object>>() {
         });
         builder.headers(headers);
@@ -203,5 +207,62 @@ public class PddInterceptor implements HttpExecutorInterceptor {
         if (methodExecutor != null) {
             result.setResult(methodExecutor.processResult(postMsg, handlerResult));
         }
+    }
+
+
+
+
+
+    /**
+     * 排序
+     */
+    public static String sortAndJoin(Map<String, Object> params) {
+        TreeMap<String, String> paramsTreeMap = new TreeMap();
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            if (entry.getValue() == null) {
+                continue;
+            }
+            paramsTreeMap.put(entry.getKey(), String.valueOf(entry.getValue()));
+        }
+        String signCalc = "";
+        for (Map.Entry<String, String> entry : paramsTreeMap.entrySet()) {
+            signCalc = String.format("%s%s=%s&", signCalc, entry.getKey(), entry.getValue(), "&");
+        }
+        if (signCalc.length() > 0) {
+            signCalc = signCalc.substring(0, signCalc.length() - 1);
+        }
+        return signCalc;
+    }
+
+
+    public static String getQueryString(Map<String, Object> params) throws UnsupportedEncodingException {
+        StringBuilder query = new StringBuilder();
+        boolean hasParam = false;
+        String[] keys = params.keySet().toArray(new String[0]);
+        Arrays.sort(keys);
+        for (String key : keys) {
+            String value = String.valueOf(params.get(key));
+            if (isNotEmpty(key, value)) {
+                if (hasParam) {
+                    query.append("&");
+                } else {
+                    hasParam = true;
+                }
+                query.append(key).append("=").append(URLEncoder.encode(value, "UTF-8"));
+            }
+        }
+        return query.toString();
+    }
+
+    public static boolean isNotEmpty(String... values) {
+        boolean result = true;
+        if (values == null || values.length == 0) {
+            result = false;
+        } else {
+            for (String value : values) {
+                result &= !StringUtils.isEmpty(value);
+            }
+        }
+        return result;
     }
 }
