@@ -6,10 +6,7 @@ import com.dj.boot.combine.handler.enums.PddTemplateConstants;
 import com.dj.boot.common.util.json.JsonUtil;
 import com.dj.boot.configuration.okhttp3.selector.support.IMethodExecutor;
 import com.dj.boot.configuration.okhttp3.selector.support.MethodExecutorSelector;
-import com.dj.boot.configuration.okhttp3.sign.HttpExecutionContext;
-import com.dj.boot.configuration.okhttp3.sign.HttpExecutionResult;
-import com.dj.boot.configuration.okhttp3.sign.HttpExecutorInterceptor;
-import com.dj.boot.configuration.okhttp3.sign.Md5SignUtil;
+import com.dj.boot.configuration.okhttp3.sign.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,6 +52,7 @@ public class PddInterceptor implements HttpExecutorInterceptor {
         handleOrderMap(parsedBody);
         Map<String, Object> requestParam = buildRequestParams(parsedBody, parsedHeader);
         buildRequestSign(requestParam, appSecret);
+        //String sign =  KuaiShouSign.signTopRequest(requestParam,appSecret, SignConstants.SIGN_METHOD_HMAC_SHA256);
         builder.params(requestParam);
         // 回调时获取执行方法名称
         builder.addExtra(PddTemplateConstants.TYPE, parsedHeader.get(PddTemplateConstants.TYPE));

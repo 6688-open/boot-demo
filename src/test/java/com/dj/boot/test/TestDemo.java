@@ -1121,6 +1121,14 @@ public class TestDemo extends BaseController {
     }
 
 
+    @Test
+    public void test47(){
+        Integer[] disposeType = {3,8,2,5};
+        Arrays.sort(disposeType);
+        System.out.println(Arrays.toString(disposeType));
+    }
+
+
 
 
 }
