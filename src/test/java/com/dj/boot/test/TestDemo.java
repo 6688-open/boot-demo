@@ -1,9 +1,12 @@
 package com.dj.boot.test;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.dj.boot.btp.common.util.noUtil.Constant;
 import com.dj.boot.btp.exception.SafJosExceptionBuilder;
 import com.dj.boot.combine.dto.Result;
 import com.dj.boot.common.base.Response;
+import com.dj.boot.common.util.ErrorUitl;
 import com.dj.boot.common.util.json.JsonUtil;
 import com.dj.boot.controller.base.BaseController;
 import com.dj.boot.controller.bill.domain.BillExceptionDto;
@@ -1120,13 +1123,54 @@ public class TestDemo extends BaseController {
         }
     }
 
+    public final static String SO_NO_REGEX = "^"+ "CSL"+"[0-9]{9,15}";//由于订单分库增加至14位
 
     @Test
     public void test47(){
-        Integer[] disposeType = {3,8,2,5};
+        ErrorUitl.ifBlank("pin", "授权码pin");
+        ErrorUitl.ifInValid(SO_NO_REGEX, "CSL00000000000000", "原始出库单号OrderCode");
+        Integer[] disposeType = {6,4,2,5};
         Arrays.sort(disposeType);
         System.out.println(Arrays.toString(disposeType));
+        List<Integer> list = Arrays.asList(disposeType);
+        if (list.contains(4) && list.contains(5)) {
+            Collections.swap(list, list.indexOf(4),list.indexOf(5));
+        }
+        disposeType = list.toArray(new Integer[0]);
+        System.out.println(Arrays.toString(disposeType));
+        Arrays.sort(disposeType);
+        for (int k = disposeType.length-1; k >= 0; k--) {
+            System.out.println(disposeType[k]);
+        }
     }
+
+
+
+    @Test
+    public void test48(){
+        User user = new User();
+        List<Map<String, String>> list = new ArrayList<>();
+        Map<String, String> carrierMap = new HashMap<String, String>(4);
+        /*carrierMap.put("carriercode", "carriercode");
+        carrierMap.put("waybill", "waybill");
+        carrierMap.put("carriername", "carriername");
+        carrierMap.put("carrierid", "carrierid");*/
+        list.add(carrierMap);
+
+        String s = JSONObject.toJSONString(list);
+        //JSONArray jsonArray = JSONObject.parseArray(s);
+        user.setUserName(s);
+        System.out.println(JSONObject.toJSONString(user));
+
+
+        String wpCode = "";
+        String wpCode1 = "{\"wp_code\":\"" + wpCode + "\"}";
+        Map map = JSONObject.parseObject(wpCode1, Map.class);
+        if (map != null && map.size() > 0) {
+            System.out.println(1);
+        }
+    }
+
 
 
 
