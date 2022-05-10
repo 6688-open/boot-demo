@@ -1203,7 +1203,7 @@ public class TestDemo extends BaseController {
 
     @Test
     public void test50(){
-        String xml = "<businessMessages xmlns=\"http://boot/BusinessMessages\"><businessMessage><uuid>17077777777777</uuid><source>C</source><topic>11111</topic><bussinessNo>222222222222</bussinessNo><header><vmiFlag>true</vmiFlag><carrierInfo>[{\"carriercode\":\"O\",\"waybill\":\"903\",\"carrierid\":\"3\",\"carriername\":\"圆通\"}]</carrierInfo></header><body><![CDATA[<pivotFlow xmlns=\"http://boot/PivotFlow\"><orderId>6666666</orderId><operPersonId>c</operPersonId><operTime>2022-05-10T09:16:20.000+08:00</operTime><status>10017</status><appendix></appendix></pivotFlow>]]></body></businessMessage></businessMessages>";
+        String xml = "<businessMessages xmlns=\"http://boot/BusinessMessages\"><businessMessage><uuid>17077777777777</uuid><source>C</source><topic>11111</topic><bussinessNo>222222222222</bussinessNo><header><vmiFlag>true</vmiFlag><carrierInfo>[{\"carriercode\":\"O\",\"waybill\":\"903\",\"carrierid\":\"3\",\"carriername\":\"圆通-顺丰-11\"}]</carrierInfo></header><body><![CDATA[<pivotFlow xmlns=\"http://boot/PivotFlow\"><orderId>6666666</orderId><operPersonId>c</operPersonId><operTime>2022-05-10T09:16:20.000+08:00</operTime><status>10017</status><appendix></appendix></pivotFlow>]]></body></businessMessage></businessMessages>";
         String statusXml = convertOrderStatusXml(xml);
         System.out.println(statusXml);
     }
@@ -1215,11 +1215,14 @@ public class TestDemo extends BaseController {
         Matcher matcher = pattern.matcher(body);
         String info = "";
         if (matcher.find()) {
-            info = JSONObject.toJSONString(matcher.group(1));
+            //info = JSONObject.toJSONString(matcher.group(1));
+            info = matcher.group(1);
+            info = info.replace("\"", "&quot;");
         }
+
         body = parseBody(body);
         body = body.replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "").replaceFirst("businessMessages", "businessMessages xmlns=\"http://boot/BusinessMessages\"").replace("<pivotFlow>", "<![CDATA[<pivotFlow xmlns=\"http://boot/PivotFlow\">\r").replace("<vmiAppendix>", "<vmiAppendix>\n" +
-                "<![CDATA[").replace("</vmiAppendix>", "]]]]><![CDATA[></vmiAppendix>").replace("</pivotFlow>", "<appendix></appendix></pivotFlow>]]>").replace("<vmiFlag>false</vmiFlag>", "").replace("<vmiFlag>true</vmiFlag>", "<property name=\"vmiFlag\" value=\"true\" />").replace("<carrierInfo>carrierInfoValue</carrierInfo>", "<property name=\"carrierInfo\" value="+info+" />");
+                "<![CDATA[").replace("</vmiAppendix>", "]]]]><![CDATA[></vmiAppendix>").replace("</pivotFlow>", "<appendix></appendix></pivotFlow>]]>").replace("<vmiFlag>false</vmiFlag>", "").replace("<vmiFlag>true</vmiFlag>", "<property name=\"vmiFlag\" value=\"true\" />").replace("<carrierInfo>carrierInfoValue</carrierInfo>", "<property name=\"carrierInfo\" value=\""+info+"\" />");
         return body.replace("\n", "").replace("\r", "");
     }
 
