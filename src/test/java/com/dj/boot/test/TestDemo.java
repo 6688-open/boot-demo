@@ -13,11 +13,13 @@ import com.dj.boot.controller.bill.domain.BillExceptionDto;
 import com.dj.boot.pojo.*;
 import com.dj.boot.test.domain.AppMsg;
 import com.dj.boot.test.domain.OrderWeChatCondition;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.apache.commons.compress.utils.Lists;
 import org.junit.Test;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import sun.misc.Regexp;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -28,6 +30,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TestDemo extends BaseController {
@@ -1169,6 +1173,115 @@ public class TestDemo extends BaseController {
         if (map != null && map.size() > 0) {
             System.out.println(1);
         }
+    }
+
+
+    @Test
+    public void test49(){
+        //String consignee = "大**";
+        //String consigneeAddr = "常*镇广东省东莞市**镇横江厦水**号**大厦***室";
+
+        String consignee = "小**";
+        String consigneeAddr = "桃*街道冠庄**村**号";
+        boolean isEncryptInfo = checkConsigneeAndAddr(consignee, consigneeAddr);
+        System.out.println(isEncryptInfo);
+    }
+
+
+    public static  boolean checkConsigneeAndAddr(String consignee,String consigneeAddr){
+        if(org.apache.commons.lang3.StringUtils.isBlank(consignee) || org.apache.commons.lang3.StringUtils.isBlank(consigneeAddr)){
+            return false;
+        }
+        String check = "*";
+        int i=(consigneeAddr.length()-consigneeAddr.replace(check, "").length())/check.length();
+        if(consignee.contains(check) && i>=1){
+            return true;
+        }
+        return false;
+    }
+
+
+    @Test
+    public void test50(){
+        String xml = "<businessMessages xmlns=\"http://boot/BusinessMessages\"><businessMessage><uuid>17077777777777</uuid><source>C</source><topic>11111</topic><bussinessNo>222222222222</bussinessNo><header><vmiFlag>true</vmiFlag><carrierInfo>[{\"carriercode\":\"O\",\"waybill\":\"903\",\"carrierid\":\"3\",\"carriername\":\"圆通\"}]</carrierInfo></header><body><![CDATA[<pivotFlow xmlns=\"http://boot/PivotFlow\"><orderId>6666666</orderId><operPersonId>c</operPersonId><operTime>2022-05-10T09:16:20.000+08:00</operTime><status>10017</status><appendix></appendix></pivotFlow>]]></body></businessMessage></businessMessages>";
+        String statusXml = convertOrderStatusXml(xml);
+        System.out.println(statusXml);
+    }
+
+
+    public static String convertOrderStatusXml(String body) {
+        String regex = "<carrierInfo>(.*)</carrierInfo>";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(body);
+        String info = "";
+        if (matcher.find()) {
+            info = JSONObject.toJSONString(matcher.group(1));
+        }
+        body = parseBody(body);
+        body = body.replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>", "").replaceFirst("businessMessages", "businessMessages xmlns=\"http://boot/BusinessMessages\"").replace("<pivotFlow>", "<![CDATA[<pivotFlow xmlns=\"http://boot/PivotFlow\">\r").replace("<vmiAppendix>", "<vmiAppendix>\n" +
+                "<![CDATA[").replace("</vmiAppendix>", "]]]]><![CDATA[></vmiAppendix>").replace("</pivotFlow>", "<appendix></appendix></pivotFlow>]]>").replace("<vmiFlag>false</vmiFlag>", "").replace("<vmiFlag>true</vmiFlag>", "<property name=\"vmiFlag\" value=\"true\" />").replace("<carrierInfo>carrierInfoValue</carrierInfo>", "<property name=\"carrierInfo\" value="+info+" />");
+        return body.replace("\n", "").replace("\r", "");
+    }
+
+    private static String parseBody(String body) {
+        System.out.println(body);
+        String startStr="<carrierInfo>";
+        String endStr="</carrierInfo>";
+        String element="carrierInfoValue";
+        String newBody =getNewProcess(startStr, endStr, body, element);
+        System.out.println(newBody);
+        return newBody;
+    }
+
+
+    public static String getNewProcess(String startStr,String endStr,String oldProcess,String element){
+        String process="";
+        //获取已经去掉内容的字符串
+        String surplusProcess=getSurplusProcess(oldProcess, startStr, endStr);
+        //插入特定字符串到特定字符串后面
+        process=insertElementToProcess(startStr, surplusProcess,element);
+        return process;
+    }
+
+    //在特定的字符串后面添加数据
+    private static String  insertElementToProcess(String startStr,String surplusProcess,String element) {
+        // 原字符串
+        StringBuffer s = new StringBuffer(surplusProcess);
+        // 要插入的字符串
+        String insertStart =element ;
+        // 插入位置
+        Pattern p = Pattern.compile(startStr);
+        Matcher m = p.matcher(s.toString());
+        // 插入字符串
+        if (m.find()) {
+            s.insert((m.start() + startStr.length()), insertStart);
+        }
+        return s.toString();
+    }
+
+
+    //将两个字符串间的内容去掉
+    private static String getSurplusProcess(String oldProcess,String startStr,String endStr) {
+        String surplusString="";
+        //获取开始子串的索引
+        int index1 = oldProcess.indexOf(startStr);
+        if (index1 != -1) {
+            //获取结束字符的索引
+            int index2 = oldProcess.indexOf(endStr, index1);
+            if (index2 != -1) {
+                //将才分的字符串进行拼接
+                String str3 = oldProcess.substring(0, index1+startStr.length());
+                String str4=oldProcess.substring(index2, oldProcess.length());
+                surplusString=str3+str4;
+            }else {
+                return oldProcess;
+
+            }
+        }else {
+            return oldProcess;
+
+        }
+        return surplusString;
     }
 
 
