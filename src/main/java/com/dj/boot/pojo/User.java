@@ -154,6 +154,9 @@ public class User extends UserCommon<Date> implements Serializable {
     @TableField(exist = false)
     private String client_id;
 
+    @TableField(exist = false)
+    private String remarksss;
+
 
     public User(Integer id, Integer sex, @Valid @NotEmpty(message = "用户名不能为空") String userName, String salt, @NotEmpty(message = "密码不能为空") String password) {
         this.id = id;

@@ -1262,4 +1262,12 @@ public class UserController extends BaseController implements EmbeddedValueResol
         stringValueResolver = resolver;
     }
 
+
+
+    @GetMapping(value = "remarkTest")
+    public Response<Object> remarkTest(User user) throws Exception {
+        System.out.println(user);
+        return null;
+    }
+
 }
