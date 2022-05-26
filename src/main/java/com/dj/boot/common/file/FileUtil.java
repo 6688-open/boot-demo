@@ -14,6 +14,11 @@ import java.util.Arrays;
 public class FileUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+    public static final  Integer FILE_SIZE = 2;
+    public static final  String FILE_UNIT_B = "B";
+    public static final  String FILE_UNIT_K = "K";
+    public static final  String FILE_UNIT_M = "M";
+    public static final  String FILE_UNIT_G = "G";
 
     // 定义可上传文件扩展名白名单
     final static String[] suffixList = new String[]{"jpg","jpeg","png","doc","docx","xls","xlsx","mp3","mp4","ppt","pptx","pdf","txt"};
@@ -34,6 +39,20 @@ public class FileUtil {
             return false;
         }
         return true;
+    }
+
+    public static boolean verifyFileSize(Long len, int size, String unit){
+        double fileSize = 0;
+        if (FILE_UNIT_B.equals(unit)) {
+            fileSize = (double)len;
+        } else if (FILE_UNIT_K.equals(unit)) {
+            fileSize = (double)len/1024;
+        } else if (FILE_UNIT_M.equals(unit)) {
+            fileSize = (double)len/1048576;
+        } else if (FILE_UNIT_G.equals(unit)) {
+            fileSize = (double)len/1073741824;
+        }
+        return !(fileSize>size);
     }
 
 
