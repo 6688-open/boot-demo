@@ -64,6 +64,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.util.StringValueResolver;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -1268,6 +1269,13 @@ public class UserController extends BaseController implements EmbeddedValueResol
     public Response<Object> remarkTest(User user) throws Exception {
         System.out.println(user);
         return null;
+    }
+
+    @ApiOperation(value = "上传附件", notes = "上传附件", httpMethod = "POST")
+    @PostMapping("invoiceUpload")
+    public void invoiceUpload(@RequestParam("files") List<MultipartFile> files,
+                                                                   @RequestParam("id") String id) {
+        System.out.println(1111);
     }
 
 }

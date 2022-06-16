@@ -1288,6 +1288,19 @@ public class TestDemo extends BaseController {
     }
 
 
+    @Test
+    public void test51(){
+
+        String[] arr1 = new String[]{"C1002"};
+        System.out.println(arr1);
+        //String [] arr = null;
+        String [] arr = {"1","2"};
+        if (null == arr || arr.length==0) {
+            System.out.println(111);
+        }
+    }
+
+
 
 
 
