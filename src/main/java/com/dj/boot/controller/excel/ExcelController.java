@@ -1,5 +1,8 @@
 package com.dj.boot.controller.excel;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.dj.boot.common.base.BaseResponse;
 import com.dj.boot.common.base.Response;
 import com.dj.boot.common.csv.CSVExporter;
@@ -40,6 +43,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.Format;
@@ -84,7 +88,26 @@ public class ExcelController extends BaseController {
         userDtos.add(build2);
         userDtos.add(build3);
         userDtos.add(build4);
-        excelUtil.exportExcelToWeb(response, userDtos,"用户信息表", ExcelType.XLSX);
+        /*excelUtil.exportExcelToWeb(response, userDtos,"用户信息表", ExcelType.XLSX);*/
+        ExcelWriter excelWriter = null;
+        try {
+            response.setContentType("application/vnd.ms-excel");
+            response.setCharacterEncoding("utf-8");
+            String fileName = URLEncoder.encode("用户信息表", "UTF-8");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ExcelType.XLSX.getType());
+            excelWriter = EasyExcel.write(response.getOutputStream(), UserDto.class).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet("用户信息表").build();
+            excelWriter.write(userDtos, writeSheet);
+            log.error("导出完成");
+        } catch (Exception e) {
+            log.error("下载文件失败：" + e.getMessage());
+        } finally {
+            // 关流
+            if (excelWriter != null) {
+                excelWriter.finish();
+            }
+        }
     }
 
     /**
