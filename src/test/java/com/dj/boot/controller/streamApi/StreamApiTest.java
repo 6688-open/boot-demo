@@ -90,6 +90,8 @@ public class StreamApiTest extends BootDemoApplicationTests {
 
         //取出id的属性值 生成一个新的set/list集合
         Set<Integer> existCustomerIds = list.stream().map(User::getId).collect(Collectors.toSet());
+        // set 转 List 泛型转化
+        List<String> billList = existCustomerIds.stream().map(String::valueOf).collect(Collectors.toList());
         List<Integer> list1 = list.stream().map(User::getId).collect(Collectors.toList());
 
 
