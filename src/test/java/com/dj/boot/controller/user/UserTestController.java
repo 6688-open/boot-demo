@@ -1,6 +1,7 @@
 package com.dj.boot.controller.user;
 
 import com.dj.boot.BootDemoApplicationTests;
+import com.dj.boot.common.util.Validators;
 import com.dj.boot.common.util.security.Sha256Utils;
 import com.dj.boot.pojo.User;
 import com.dj.boot.pojo.UserDto;
@@ -26,9 +27,17 @@ public class UserTestController extends BootDemoApplicationTests {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Validators validators;
+
+
 
     @Override
     public void run() throws Exception {
+
+        User user = new User();
+        user.setEmail("18351867657@163.com");
+        validators.validate(user);
 
         List<User> userList = userService.findUserListByCondition(new UserDto());
         String str = resolverFlowConditions(userList);

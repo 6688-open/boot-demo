@@ -1,8 +1,6 @@
 package com.dj.boot.test;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.dj.boot.btp.common.util.noUtil.Constant;
 import com.dj.boot.btp.exception.SafJosExceptionBuilder;
 import com.dj.boot.combine.dto.Result;
 import com.dj.boot.common.base.Response;
@@ -15,16 +13,11 @@ import com.dj.boot.controller.bill.domain.BillExceptionDto;
 import com.dj.boot.pojo.*;
 import com.dj.boot.test.domain.AppMsg;
 import com.dj.boot.test.domain.OrderWeChatCondition;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.apache.commons.compress.utils.Lists;
 import org.junit.Test;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import sun.misc.Regexp;
-
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
