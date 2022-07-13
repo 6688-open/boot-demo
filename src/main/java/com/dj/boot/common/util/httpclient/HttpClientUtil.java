@@ -47,9 +47,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * http工具类
- * @author liuyl
- * @version 1.0.0 , 2014年12月8日 下午2:28:48
+ * http调用工具 亲测可用
+ *
+ * @Author: wangjia@fescotech.com
+ * @Date: 2022-07-13-16-57
  */
 public class HttpClientUtil {
 
@@ -60,11 +61,12 @@ public class HttpClientUtil {
 	private static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(15000).setConnectionRequestTimeout(7500).setSocketTimeout(15000).build();
 
 	/** 编码设置*/
-	private static final String encoding = "UTF-8";
+	private static final String ENCODING = "UTF-8";
 
 	/** 请求方式枚举*/
 	public enum HttpRequestMethod {
-		GET, POST
+		GET,
+		POST;
 	}
 
 	/**
@@ -72,7 +74,7 @@ public class HttpClientUtil {
 	 * 
 	 * @return 自动关闭的https连接
 	 * @throws Exception
-	 * @author liuyl
+	 * @author wangjia
 	 */
 	public static CloseableHttpClient getHttpsClient() throws Exception {
 		CloseableHttpClient httpClient = null;
@@ -143,7 +145,7 @@ public class HttpClientUtil {
 			response = sendPostRequest(url, params);
 		}
 		HttpEntity entity = response.getEntity();
-		result = EntityUtils.toString(entity, encoding);
+		result = EntityUtils.toString(entity, ENCODING);
 		int statusCode = response.getStatusLine().getStatusCode();
 		response.close();
 		if (statusCode == HttpStatus.SC_OK) {
@@ -173,7 +175,7 @@ public class HttpClientUtil {
 		CloseableHttpResponse response = null;
 		String result = null;
 		try {
-			Charset charset = CharsetUtils.get(encoding);
+			Charset charset = CharsetUtils.get(ENCODING);
 			// post模式且带上传文件
 			httpClient = getHttpClient();
 			HttpPost httpPost = new HttpPost(url);
@@ -229,7 +231,7 @@ public class HttpClientUtil {
 		CloseableHttpResponse response = null;
 		String result = null;
 		try{
-			Charset charset = CharsetUtils.get(encoding);
+			Charset charset = CharsetUtils.get(ENCODING);
 			// post模式且带上传文件
 			httpClient = getHttpClient();
 			HttpPost httpPost = new HttpPost(url);
@@ -333,7 +335,7 @@ public class HttpClientUtil {
 			for (Map.Entry<String, String> entry : params.entrySet()) {
 				nvpList.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 			}
-			httpPost.setEntity(new UrlEncodedFormEntity(nvpList, encoding));
+			httpPost.setEntity(new UrlEncodedFormEntity(nvpList, ENCODING));
 		}
 
 		return getHttpClient().execute(httpPost);

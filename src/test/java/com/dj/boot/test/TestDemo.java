@@ -7,12 +7,15 @@ import com.dj.boot.btp.exception.SafJosExceptionBuilder;
 import com.dj.boot.combine.dto.Result;
 import com.dj.boot.common.base.Response;
 import com.dj.boot.common.util.ErrorUitl;
+import com.dj.boot.common.util.httpclient.HttpClientUtil;
+import com.dj.boot.common.util.httpclient.HttpRequestUtil;
 import com.dj.boot.common.util.json.JsonUtil;
 import com.dj.boot.controller.base.BaseController;
 import com.dj.boot.controller.bill.domain.BillExceptionDto;
 import com.dj.boot.pojo.*;
 import com.dj.boot.test.domain.AppMsg;
 import com.dj.boot.test.domain.OrderWeChatCondition;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import org.apache.commons.compress.utils.Lists;
 import org.junit.Test;
@@ -1298,6 +1301,25 @@ public class TestDemo extends BaseController {
         if (null == arr || arr.length==0) {
             System.out.println(111);
         }
+    }
+
+    @Test
+    public void test52() throws Exception {
+        String url = "";
+        //Content-Type: application/x-www-form-urlencoded
+
+        String jsondata="{\"custIdList\":\"SUPP0000000000002000\",\"vatColltIdList\":[23390,23392],\"custType\":2,\"corpId\":\"SUPP0000000000000999\"}";
+
+        Map<String, String> map = new HashMap<>();
+        map.put("jsondata", jsondata);
+        String s = JSONObject.toJSONString(map);
+        System.out.println(s);
+
+        String s1 = HttpClientUtil.sendHttpRequest(url, HttpClientUtil.HttpRequestMethod.POST, map);
+        System.out.println(s1);
+
+        String post = HttpRequestUtil.post(url, jsondata);
+        System.out.println(post);
     }
 
 
