@@ -1,5 +1,6 @@
 package com.dj.boot.common.excel.easyExcel;
 
+import com.alibaba.excel.EasyExcel;
 import com.dj.boot.common.file.FileCreateUtil;
 import org.junit.Test;
 
@@ -29,6 +30,7 @@ public class EasyTest {
 
     private static void writeExcel() throws FileNotFoundException {
         File file = FileCreateUtil.fileExcelCreate("wj");
+        //EasyExcel.write(file,User.class).sheet().doWrite(data());
         EasyExcelUtil.writeExcel(file, data());
 
         //打印一下  一般获取到文件上传文件服务器
