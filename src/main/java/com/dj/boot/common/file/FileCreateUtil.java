@@ -30,10 +30,10 @@ public class FileCreateUtil {
      */
     public static File fileExcelCreate(String namePre) {
         //String time = String.valueOf(System.currentTimeMillis());
-        String timeNow = DateUtils.timeNow();
+        String dateNow = DateUtils.dateNow();
         //根据生成相应的bean对象
         //拼接文件名称
-        String fileName = new StringBuilder(namePre).append(SUFFIX).append(timeNow).append(ExcelType.XLSX.getType()).toString();
+        String fileName = new StringBuilder(namePre).append(SUFFIX).append(dateNow).append(ExcelType.XLSX.getType()).toString();
         File file = new File(TMP_DIR);
         if (!file.exists()) {
             boolean mkdirs = file.mkdirs();
