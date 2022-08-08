@@ -1,8 +1,10 @@
 package com.dj.boot.common.mail.impl;
 
+import com.dj.boot.common.excel.exc.ExcelType;
 import com.dj.boot.common.mail.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 /**
  * 发送邮件服务
@@ -25,6 +29,8 @@ import java.io.File;
 public class EmailServiceImpl implements EmailService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final String SUFFIX = ".";
 
     @Resource
     private JavaMailSender javaMailSender;

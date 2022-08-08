@@ -22,6 +22,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
+    public static String HHMMSS = "HHmmss";
+
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
     private static String[] parsePatterns = {
@@ -61,6 +63,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static final String dateTimeNow() {
         return dateTimeNow(YYYYMMDDHHMMSS);
+    }
+    public static final String timeNow() {
+        return dateTimeNow(HHMMSS);
     }
 
     public static final String dateTimeNow(final String format) {

@@ -5,6 +5,7 @@ import com.dj.boot.btp.exception.SomsBizException;
 import com.dj.boot.common.base.BaseResponse;
 import com.dj.boot.common.base.Response;
 import com.dj.boot.common.enums.ReceiptsPerformTypeEnum;
+import com.dj.boot.common.mail.MailTest;
 import com.dj.boot.configuration.processor.factorybean.MyFactoryBeanService;
 import com.dj.boot.controller.base.BaseController;
 import com.dj.boot.pojo.ComplexAssembly;
@@ -64,6 +65,9 @@ public class TestController extends BaseController {
     @Autowired
     private MyFactoryBeanService myFactoryBeanService;
 
+    @Autowired
+    private MailTest mailTest;
+
 
     @ApiOperation(value = "测试切面注解", notes="测试切面注解")
     @ApiImplicitParams({
@@ -72,6 +76,7 @@ public class TestController extends BaseController {
     })
     @PostMapping("test")
     public Response<String> test(String name) {
+        mailTest.sendEmail(null);
         System.out.println(33333);
         try {
             String echo = myFactoryBeanService.echo(name);
