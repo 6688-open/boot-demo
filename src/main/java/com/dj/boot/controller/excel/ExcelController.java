@@ -91,11 +91,16 @@ public class ExcelController extends BaseController {
         /*excelUtil.exportExcelToWeb(response, userDtos,"用户信息表", ExcelType.XLSX);*/
         ExcelWriter excelWriter = null;
         try {
-            response.setContentType("application/vnd.ms-excel");
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+            String fileName = URLEncoder.encode("用户信息表", "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ExcelType.XLSX.getType());
+
+            /*response.setContentType("application/vnd.ms-excel");
             response.setCharacterEncoding("utf-8");
             String fileName = URLEncoder.encode("用户信息表", "UTF-8");
             response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
-            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ExcelType.XLSX.getType());
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ExcelType.XLSX.getType());*/
             excelWriter = EasyExcel.write(response.getOutputStream(), UserDto.class).build();
             WriteSheet writeSheet = EasyExcel.writerSheet("用户信息表").build();
             excelWriter.write(userDtos, writeSheet);
