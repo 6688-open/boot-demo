@@ -543,10 +543,10 @@ public class ExcelController extends BaseController {
             tmpFile = File.createTempFile("user-export-template", ".csv");
 
             boolean  flag = false;
-            long startTime = new Date().getTime();
-
-            while (new Date().getTime()-startTime <= 3000 && !flag){//执行3s
-                logger.error("时间:{},进入循环", new Date().getTime()-startTime);
+            long startTime = System.currentTimeMillis();
+            //执行3s
+            while (System.currentTimeMillis()-startTime <= 3000 && !flag){
+                logger.error("时间:{},进入循环", System.currentTimeMillis()-startTime);
                 CsvExportUtil.createCSVFile(tmpFile, columnFields, ERROR_DEVICE_ORDER_FIELDNAMES, userList);
                 CsvExportUtil.appendCSVFile(tmpFile, columnFields, ERROR_DEVICE_ORDER_FIELDNAMES, userList);
                 //Thread.sleep(6000);
