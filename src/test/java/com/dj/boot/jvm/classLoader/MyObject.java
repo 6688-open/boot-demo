@@ -1,12 +1,6 @@
 package com.dj.boot.jvm.classLoader;
 
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.dj.boot.pojo.User;
-
-import java.lang.ref.SoftReference;
-import java.util.Random;
-
 /**
  * 1  JVM 系统架构
  *
