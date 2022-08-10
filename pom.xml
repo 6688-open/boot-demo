@@ -74,6 +74,7 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.1.0</version>
             <!--<version>3.5.1</version>-->
+            <!-- 代码生成器 打开3.5.1 注释掉com.dj.boot.configuration.mybatisplus.MybatisPlusConfig-->
         </dependency>
 
         <!--代码生成器-->
