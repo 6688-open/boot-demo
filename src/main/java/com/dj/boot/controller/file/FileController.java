@@ -48,9 +48,9 @@ public class FileController extends BaseController {
         String thumbObjectKey = FSObjectKeyUtil.generateObjectKeyWithThumbnail(originName, uuid);
 
         String url = FSObjectKeyUtil.getObjectURL(objectKey);
-        url = "https://i.shangc.net/2017/0918/20170918095640882.jpg";
+        url = "https://img2.baidu.com/it/u=2304960815,3164512385&fm=253&fmt=auto?w=800&h=1200.jpg";
         String thumbUrl = FSObjectKeyUtil.getObjectURL(thumbObjectKey);
-        thumbUrl = "https://i.shangc.net/2017/0918/20170918095640882.jpg";
+        thumbUrl = "https://img2.baidu.com/it/u=2304960815,3164512385&fm=253&fmt=auto?w=800&h=1200.jpg";
 
         String fileTypeStr = FileUtil.getFileType(originName);
         String fileType = String.valueOf(FileType.FILE.getIndex());
