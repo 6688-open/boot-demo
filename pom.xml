@@ -692,17 +692,17 @@
         </plugins>
     </build>
 
-    <dependencyManagement>
+    <!--<dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.dj.boot</groupId>
                 <artifactId>base_dependency</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <type>pom</type>
-                <scope>import</scope> <!--从其它的pom文件中导入依赖设置-->
+                <scope>import</scope> &lt;!&ndash;从其它的pom文件中导入依赖设置&ndash;&gt;
             </dependency>
         </dependencies>
-    </dependencyManagement>
+    </dependencyManagement>-->
 
 <!--scope的分类
 

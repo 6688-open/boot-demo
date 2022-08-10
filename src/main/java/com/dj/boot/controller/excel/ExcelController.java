@@ -2,7 +2,9 @@ package com.dj.boot.controller.excel;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.enums.WriteDirectionEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.dj.boot.common.base.BaseResponse;
 import com.dj.boot.common.base.Response;
 import com.dj.boot.common.csv.CSVExporter;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -112,6 +115,60 @@ public class ExcelController extends BaseController {
             if (excelWriter != null) {
                 excelWriter.finish();
             }
+        }
+    }
+
+    /**
+     * 导出excel
+     * @param response
+     */
+    @GetMapping("exportExcelByTemplate")
+    public void exportExcelByTemplate(HttpServletResponse response){
+
+        List<Map<String, Object>> list = Lists.newArrayList();
+        Map<String, Object> map1 = new HashMap<String, Object>();
+        map1.put("serialNo", "2019年10月9日13:28:28");
+        map1.put("businessClient", "wangjia");
+        map1.put("businessClientNo", "业务部");
+        list.add(map1);
+
+        String templateFileName = ExcelController.class.getResource("/").getPath() + "template/xlsx/" + "test.xlsx";
+        try {
+            ServletOutputStream out = response.getOutputStream();
+            response.setContentType("multipart/form-data");
+            response.setCharacterEncoding("utf-8");
+            response.setHeader("Content-Disposition", "attachment;filename*=utf-8'zh_cn'" + URLEncoder.encode(System.currentTimeMillis() + ".xlsx", "UTF-8"));
+            ExcelWriter excelWriter = EasyExcel.write(out, ExcelController.class).withTemplate(templateFileName).build();
+            //创建Sheet
+            //设置excel Sheet为第几张并设置名称
+            //.writerSheet(0,"第一个")中前面的参数为sheetNo,就是第几张sheet
+            //第二参数为sheet名称
+            //不写就是默认
+            WriteSheet writeSheet = EasyExcel.writerSheet().build();
+            // 这里注意 入参用了forceNewRow 代表在写入list的时候不管list下面有没有空行 都会创建一行，然后下面的数据往后移动。默认 是false，会直接使用下一行，如果没有则创建。
+            // forceNewRow 如果设置了true,有个缺点 就是他会把所有的数据都放到内存了，所以慎用
+            // 简单的说 如果你的模板有list,且list不是最后一行，下面还有数据需要填充 就必须设置 forceNewRow=true 但是这个就会把所有数据放到内存 会很耗内存
+            //.direction(WriteDirectionEnum.VERTICAL)这个是设置list填入的时候是纵向填入
+            FillConfig fillConfig = FillConfig.builder().direction(WriteDirectionEnum.VERTICAL).forceNewRow(Boolean.FALSE).build();
+            //这里是将list填充到excel中。
+            //会去找模板上对应的数据填入，例如模板中的{list.getGoodsName}就是下面List集合中名为goodsName字段对应的数据
+            //new FillWrapper("list", selectOrderDTO.getSelectOrderGoodsDTOS())前面的参数是设置一个填入的list名
+            //后面的参数是获得的list，里面就包含了要填入的数据
+            //.fill()主要就是将数据填入excel中
+            excelWriter.fill(list, fillConfig, writeSheet);
+            //这里是将一些普通数据放到map中，方便填入，可以看getStringObjectMap()。
+            //map的String是对应的名称，Object就是数据了。
+            //将数据填入
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("dateTime", "2019年10月9日13:28:28");
+            map.put("salesman", "wangjia");
+            map.put("salesDepartment", "业务部");
+            excelWriter.fill(map, writeSheet);
+            //关闭
+            excelWriter.finish();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
