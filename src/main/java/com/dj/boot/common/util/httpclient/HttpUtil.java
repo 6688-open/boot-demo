@@ -1,4 +1,4 @@
-package com.dj.boot.common.util;
+package com.dj.boot.common.util.httpclient;
 
 
 import org.apache.logging.log4j.LogManager;

@@ -1,4 +1,4 @@
-package com.dj.boot.common.util;
+package com.dj.boot.common.util.http;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;

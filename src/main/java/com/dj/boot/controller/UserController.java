@@ -16,10 +16,6 @@ import com.dj.boot.btp.common.util.sensitive.sensitiveutil.SensitiveUtil;
 import com.dj.boot.btp.common.util.sensitive.type.DataMethodType;
 import com.dj.boot.btp.exception.BizException;
 import com.dj.boot.btp.exception.ParamException;
-import com.dj.boot.combine.CombineService;
-import com.dj.boot.combine.dto.BusinessTypeEnum;
-import com.dj.boot.combine.dto.Command;
-import com.dj.boot.combine.dto.Result;
 import com.dj.boot.common.base.BaseResponse;
 import com.dj.boot.common.base.Response;
 import com.dj.boot.common.base.page.PageRequestParam;
@@ -30,11 +26,15 @@ import com.dj.boot.common.mapper.convert.UserToUserDtoConvert;
 import com.dj.boot.common.util.*;
 import com.dj.boot.common.util.collection.CollectionUtils;
 import com.dj.boot.common.util.cookie.CookieUtils;
+import com.dj.boot.common.util.http.HttpRequestUtil;
+import com.dj.boot.common.util.httpclient.HttpUtil;
+import com.dj.boot.common.util.httpclient.gw.CoreFtGwRequest;
+import com.dj.boot.common.util.httpclient.gw.vo.UserResponseVo;
+import com.dj.boot.common.util.httpclient.gw.vo.UserVo;
 import com.dj.boot.common.util.json.JsonUtil;
 import com.dj.boot.common.util.md5.PasswordSecurityUtil;
 import com.dj.boot.configuration.dispatch.proxy.ProxyDispatch;
 import com.dj.boot.controller.base.BaseController;
-import com.dj.boot.controller.so.constant.SoErrResume;
 import com.dj.boot.helper.TestHelper;
 import com.dj.boot.helper.UserHelper;
 import com.dj.boot.pojo.KdnTrackReqDto;
@@ -199,6 +199,9 @@ public class UserController extends BaseController implements EmbeddedValueResol
     @Resource(name = "testKeyConfig")
     private Map<Integer, String> testKeyConfig;
 
+    @Resource
+    private CoreFtGwRequest coreFtGwRequest;
+
 
 
     /**
@@ -300,11 +303,11 @@ public class UserController extends BaseController implements EmbeddedValueResol
 
         String topic = stringValueResolver.resolveStringValue("${ip00001}");
 
-        /*适配模式*/
+        //适配模式
         WayBillServiceAdapter adapter = wayBillServiceAdapterHolder.getBizWayBillServiceAdapterByShipper("19");
         String str = adapter.queryWbMainBySoNo("sono");
 
-        /*日志接口*/
+        //日志接口
         SoCreateRequest soCreateRequest = new SoCreateRequest();
         User user1 = new User();
         user1.setId(1);
@@ -312,10 +315,10 @@ public class UserController extends BaseController implements EmbeddedValueResol
         user1.setPassword("123456");
         soCreateRequest.setUserDeliveryOrder(user1);
         stockService.transportSoOrder("wj", soCreateRequest);
-        /*JDK1.8*/
+        //JDK1.8
         DeptEntity deptEntity = masterService.getDept("CBU12345678");
         logger.error("deptEntity:{}", JSONObject.toJSONString(deptEntity));
-        /*转换器*/
+        //转换器
         DefaultConversionService conversionService = new DefaultConversionService();
         conversionService.addConverter(new StringToDateConverter());
         Date date = conversionService.convert("2021-10-12 12:12:12", Date.class);
@@ -330,8 +333,9 @@ public class UserController extends BaseController implements EmbeddedValueResol
         Response<String> test = testController.test("2222");
         String userInfo = TestHelper.getUserInfo();
         String userInfo1 = userHelper.getUserInfo();
-        Response<User>  response = Response.success();
-        return response;
+        User byId = userService.getById(user.getId());
+        logger.error("查询user信息:{}", JSONObject.toJSONString(byId));
+        return Response.success(byId);
     }
 
     /**
@@ -1277,5 +1281,25 @@ public class UserController extends BaseController implements EmbeddedValueResol
                                                                    @RequestParam("id") String id) {
         System.out.println(1111);
     }
+
+
+    /**
+     * 测试网关接口
+     * @param id
+     * @return
+     */
+    @PostMapping("userEcho")
+    public Response<Object> userEcho (Integer id) throws Exception {
+        User user = new User();
+        user.setId(id);
+        UserResponseVo responseVo = coreFtGwRequest.userEcho(user);
+        UserVo userVo = responseVo.getData();
+        return Response.success(userVo);
+    }
+
+
+
+
+
 
 }
