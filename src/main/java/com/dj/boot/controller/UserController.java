@@ -1,6 +1,7 @@
 package com.dj.boot.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dj.boot.adapter.WayBillServiceAdapter;
 import com.dj.boot.adapter.WayBillServiceAdapterHolder;
@@ -1295,6 +1296,16 @@ public class UserController extends BaseController implements EmbeddedValueResol
         UserResponseVo responseVo = coreFtGwRequest.userEcho(user);
         UserVo userVo = responseVo.getData();
         return Response.success(userVo);
+    }
+
+    @PostMapping("userList")
+    public Response<List<User>> userList (Integer id) throws Exception {
+        //查询用户
+        List<User> list = userService.list(Wrappers.<User>query().lambda()
+                //.select(User::getId)
+                .in(User::getId, id)
+        );
+        return Response.success(list);
     }
 
 
