@@ -23,4 +23,7 @@ public class PropertiesUtils implements EmbeddedValueResolverAware {
     public static String getPropertiesValue(String key){
         return resolver.resolveStringValue(key);
     }
+
+    //String propertiesValue = PropertiesUtils.getPropertiesValue("${financial.bs}");
+    //String propertiesValue1 = PropertiesUtils.getPropertiesValue("${financial.corpId}");
 }
