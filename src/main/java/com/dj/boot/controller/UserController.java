@@ -203,6 +203,9 @@ public class UserController extends BaseController implements EmbeddedValueResol
     @Resource
     private CoreFtGwRequest coreFtGwRequest;
 
+    @Autowired
+    Map<String, UserService> serviceMap;
+
 
 
     /**
@@ -296,7 +299,8 @@ public class UserController extends BaseController implements EmbeddedValueResol
     @ApiOperation(value = "测试")
     @PostMapping("echo")
     public Response<User> echo(@RequestBody User user) throws Exception {
-
+        logger.error(serviceMap.toString());
+        boolean b = serviceMap.containsKey("***");
         String configStr = testKeyConfig.get(1);
         String[] splits = configStr.split(",");
         logger.error("配置信息:{},{}",splits[0], splits[1]);
