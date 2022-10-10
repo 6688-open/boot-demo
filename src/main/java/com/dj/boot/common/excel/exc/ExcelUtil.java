@@ -193,9 +193,10 @@ public class ExcelUtil<T> {
         //String fileName = "Product.xlsx";
         //配置response的头
         try {
-            response.reset();
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            response.setCharacterEncoding("utf-8");
+            String name = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + name + ExcelType.XLSX.getType());
             //循环从文件中读出数据后写出，完成下载
             byte[] b = new byte[1024];
             int len;

@@ -333,7 +333,7 @@ public class ExcelController extends BaseController {
             //InputStream inputStream = this.getClass().getResourceAsStream("/template/xlsx/Product.xlsx");
             //InputStream inputStream = new FileInputStream("D:/user.xlsx");
             InputStream inputStream = this.getClass().getResourceAsStream("/template/xlsx/User.xlsx");
-            ExcelUtil.downloadTemplate(inputStream, response, "User.xlsx");
+            ExcelUtil.downloadTemplate(inputStream, response, "User");
         } catch (Exception e) {
             logger.error("异常,{}", e.getMessage());
         }
