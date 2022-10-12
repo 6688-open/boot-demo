@@ -35,6 +35,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -257,14 +259,15 @@ public class ExcelController extends BaseController {
         ThreadPoolUtils.getThreadPoolExecutor().prestartAllCoreThreads();
         //size向上取整
         int size = (int) Math.ceil((double) list.size() / (double) BATCH_NUM);
-
+        //非 Web 上下文无法获取 Request https://my.oschina.net/u/1156250/blog/5560568
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         CountDownLatch countDownLatch = new CountDownLatch(size);
         List<Future> futureList = new CopyOnWriteArrayList<>();
         // 分批异步处理 开启多个线程执行多个任务
         for (int i = 0; i < size; i++) {
             List<User> userList = list.stream().skip(i * BATCH_NUM).limit(BATCH_NUM).collect(Collectors.toList());
 
-            Future<String> future = ThreadPoolUtils.getThreadPoolExecutor().submit(new doSaveUserInfo(userList, countDownLatch));
+            Future<String> future = ThreadPoolUtils.getThreadPoolExecutor().submit(new doSaveUserInfo(userList, countDownLatch, attributes));
             futureList.add(future);
         }
         try {
@@ -290,15 +293,18 @@ public class ExcelController extends BaseController {
 
         private List<User> userList;
         private CountDownLatch countDownLatch;
+        private RequestAttributes attributes;
 
-        public doSaveUserInfo(List<User> userList, CountDownLatch countDownLatch) {
+        public doSaveUserInfo(List<User> userList, CountDownLatch countDownLatch, RequestAttributes attributes) {
             this.userList = userList;
             this.countDownLatch = countDownLatch;
+            this.attributes = attributes;
         }
 
         @Override
         public String call() throws Exception {
             try {
+                RequestContextHolder.setRequestAttributes(attributes);
                 Format f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String format = f.format(new Date());
                 logger.error("当前线程名称-------"+Thread.currentThread().getName() + "时间 " + format + "数量:" + userList.size());
