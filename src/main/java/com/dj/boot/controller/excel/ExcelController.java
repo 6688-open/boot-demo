@@ -801,4 +801,34 @@ public class ExcelController extends BaseController {
             IOUtils.closeQuietly(output);
         }
     }
+
+
+    /**
+     * 生成差异文件
+     *
+     * @param serialNo 序列号
+     * @param sheetNo  sheet号
+     * @param datas    数据
+     */
+    private void writeDifferFile(String serialNo, Integer sheetNo, Set<String> headSet, List<Map<String, String>> datas) {
+        String tempDownLoadPath = "";
+        File file = new File(tempDownLoadPath + File.separator + serialNo + ".xlsx");
+        String path = tempDownLoadPath + File.separator + serialNo + ".xlsx";
+        cn.hutool.poi.excel.ExcelWriter writer = cn.hutool.poi.excel.ExcelUtil.getWriter(path);
+        writer.setSheet(sheetNo);
+        writer.writeHeadRow(headSetSort(headSet));
+        writer.setCurrentRow(getCurrentRow(path, sheetNo, datas.size()));
+        writer.write(datas, false);
+        writer.close();
+    }
+
+    private List<String> headSetSort(Set<String> headSet) {
+        List<String> headList = new ArrayList<>(headSet.size() + 4);
+        return headList;
+    }
+
+    private int getCurrentRow(String serialNo, Integer sheetNo, int num) {
+        int currentRow = 10; // Redis.get(key)
+        return currentRow;
+    }
 }
