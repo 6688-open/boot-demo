@@ -1,8 +1,11 @@
 package com.dj.boot.controller.excel;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.enums.WriteDirectionEnum;
+import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.dj.boot.common.base.BaseResponse;
@@ -19,6 +22,8 @@ import com.dj.boot.common.excel.poi.ReceiptsPerformItemDto;
 import com.dj.boot.common.threadpoolutil.ThreadPoolUtils;
 import com.dj.boot.common.util.date.DateUtil;
 import com.dj.boot.controller.base.BaseController;
+import com.dj.boot.controller.excel.listener.BillDifferData;
+import com.dj.boot.controller.excel.listener.ExcelCompareListener;
 import com.dj.boot.pojo.User;
 import com.dj.boot.service.pdf.PdfService;
 import com.dj.boot.service.user.UserService;
@@ -189,6 +194,7 @@ public class ExcelController extends BaseController {
             response.setCode(400);
             return response;
         }
+        //easyExcelImport(file);
         switch (operatorType){
             case "1" :
                 System.out.println(11111111);
@@ -250,6 +256,7 @@ public class ExcelController extends BaseController {
 
         return  response;
     }
+
 
     private static final Integer BATCH_NUM = 10;
 
@@ -562,10 +569,10 @@ public class ExcelController extends BaseController {
             if (flag) {
                 log.error("异步任务导出完成");
                 //将文件临时存储文件服务器
-                String key = "export/user/user-export-" + "wangjia".hashCode() + "-" + new Date().getTime() + ".csv";
+                String key = "export/user/user-export-" + "wangjia".hashCode() + "-" + System.currentTimeMillis() + ".csv";
                 uploadFile(tmpFile, key);
             } else {
-                log.error("异步任务执行超时,线程:"+Thread.currentThread().getName()+"线程执行时间:"+(new Date().getTime() - startTime)+"ms");
+                log.error("异步任务执行超时,线程:"+Thread.currentThread().getName()+"线程执行时间:"+(System.currentTimeMillis() - startTime)+"ms");
             }
 
             //setResponse(tmpFile, response);
@@ -731,7 +738,8 @@ public class ExcelController extends BaseController {
         userList.forEach(user -> {
             UserDto u = new UserDto();
             try {
-                BeanUtils.copyProperties(u, user);
+                BeanUtil.copyProperties(u, user);
+                //BeanUtils.copyProperties(u, user);
                 u.setUsername(user.getUserName());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -830,5 +838,20 @@ public class ExcelController extends BaseController {
     private int getCurrentRow(String serialNo, Integer sheetNo, int num) {
         int currentRow = 10; // Redis.get(key)
         return currentRow;
+    }
+
+
+
+    private void easyExcelImport(MultipartFile file) throws IOException {
+        ExcelReader excelReader1 = EasyExcel.read(file.getInputStream()).build();
+        List<ReadSheet> readSheetList1 = excelReader1.excelExecutor().sheetList();
+        excelReader1.finish();
+
+        ExcelCompareListener<BillDifferData> listener = new ExcelCompareListener<>();
+        // headRowNumber 默认参数1 默认第一行是表头
+        EasyExcel.read(file.getInputStream(), listener).sheet(0).headRowNumber(1).doRead();
+        List<BillDifferData> datas = listener.getDatas();
+
+
     }
 }
