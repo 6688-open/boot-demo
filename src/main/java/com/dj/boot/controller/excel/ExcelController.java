@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.alibaba.excel.enums.WriteDirectionEnum;
 import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.excel.write.metadata.WriteSheet;
@@ -849,7 +850,7 @@ public class ExcelController extends BaseController {
 
         ExcelCompareListener<BillDifferData> listener = new ExcelCompareListener<>();
         // headRowNumber 默认参数1 默认第一行是表头
-        EasyExcel.read(file.getInputStream(), listener).sheet(0).headRowNumber(1).doRead();
+        EasyExcel.read(file.getInputStream(), listener).extraRead(CellExtraTypeEnum.MERGE).sheet(0).headRowNumber(1).doRead();
         List<BillDifferData> datas = listener.getDatas();
 
 

@@ -3,8 +3,10 @@ package com.dj.boot.controller.excel.listener;
 import cn.hutool.core.util.IdcardUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.metadata.CellExtra;
 import com.alibaba.excel.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -38,14 +40,6 @@ public class ExcelCompareListener<T> extends AnalysisEventListener<Map<Integer, 
 
         Map<String, String> dataTmp = new HashMap<>(16);
         BillDifferData billDifferData = new BillDifferData();
-        //判断是否有合并单元格
-        data.forEach((key, value)->{
-            if(!StringUtils.isEmpty(value)){
-                if((headMap.containsKey(key) && StringUtils.isEmpty(headMap.get(key))) || (!headMap.containsKey(key))){
-                    log.error("数据有合并单元格或数据没有列头");
-                }
-            }
-        });
 
         //拼装数据到map集合中
         headMap.forEach((key,value)->{
@@ -64,6 +58,28 @@ public class ExcelCompareListener<T> extends AnalysisEventListener<Map<Integer, 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
 
+    }
+
+
+    @SneakyThrows
+    @Override
+    public void extra(CellExtra extra, AnalysisContext context) {
+        switch (extra.getType()) {
+            case MERGE: {
+                if (extra.getRowIndex() >= 1 ) { // headRowNumber
+                    log.error("额外信息是合并单元格, 且覆盖了一个区间, 在FirstRowIndex:{}, FirstColumnIndex:{}, LastRowIndex:{}, LastColumnIndex:{}", extra.getFirstRowIndex(), extra.getFirstColumnIndex(), extra.getLastRowIndex(), extra.getLastColumnIndex());
+                    throw new Exception("数据解析失败, 存在合并单元格");
+                }
+                break;
+            }
+            case HYPERLINK: {
+                break;
+            }
+            case COMMENT: {
+            }
+            default: {
+            }
+        }
     }
 
     public List<T> getDatas() {
