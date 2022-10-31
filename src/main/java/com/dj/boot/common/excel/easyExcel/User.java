@@ -1,14 +1,14 @@
 package com.dj.boot.common.excel.easyExcel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.metadata.BaseRowModel;
+//import com.alibaba.excel.metadata.BaseRowModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-public class User extends BaseRowModel {
+public class User /*extends BaseRowModel*/ {
     @ExcelProperty(value = "姓名", index = 0)
     private String name;
 

@@ -1,3 +1,4 @@
+/*
 package com.dj.boot.common.excel.easyExcel;
 
 import com.alibaba.excel.ExcelReader;
@@ -13,13 +14,15 @@ import java.util.List;
 
 @Slf4j
 public class EasyExcelUtil {
-    /**
+    */
+/**
      * 从Excel中读取文件，读取的文件是一个DTO类，该类必须继承BaseRowModel
      * 具体实例参考 ： MemberMarketDto.java
      * 参考：https://github.com/alibaba/easyexcel
      * 字符流必须支持标记，FileInputStream 不支持标记，可以使用BufferedInputStream 代替
      * BufferedInputStream bis = new BufferedInputStream(new FileInputStream(...));
-     */
+     *//*
+
     public static <T extends BaseRowModel> List<T> readExcel(final InputStream inputStream, final Class<? extends BaseRowModel> clazz) {
         if (null == inputStream) {
             throw new NullPointerException("the inputStream is null!");
@@ -33,11 +36,13 @@ public class EasyExcelUtil {
     }
 
 
-    /**
+    */
+/**
      * 将数据写入文件
      * @param file
      * @param list
-     */
+     *//*
+
     public static void writeExcel(final File file, List<? extends BaseRowModel> list) {
         try (OutputStream out = new FileOutputStream(file)) {
             ExcelWriter writer = new ExcelWriter(out, ExcelTypeEnum.XLSX);
@@ -52,9 +57,11 @@ public class EasyExcelUtil {
     }
 
 
-    /**
+    */
+/**
      * 根据输入流，判断为xls还是xlsx，该方法原本存在于easyexcel 1.1.0 的ExcelTypeEnum中。
-     */
+     *//*
+
     public static ExcelTypeEnum valueOf(InputStream inputStream) {
         try {
             FileMagic fileMagic = FileMagic.valueOf(inputStream);
@@ -71,3 +78,4 @@ public class EasyExcelUtil {
         }
     }
 }
+*/
