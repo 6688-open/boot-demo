@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dj.boot.btp.exception.SafJosExceptionBuilder;
 import com.dj.boot.combine.dto.Result;
 import com.dj.boot.common.base.Response;
+import com.dj.boot.common.util.ClassCompareUtil;
 import com.dj.boot.common.util.ErrorUitl;
 import com.dj.boot.common.util.httpclient.HttpClientUtil;
 import com.dj.boot.common.util.httpclient.HttpRequestUtil;
@@ -37,6 +38,12 @@ public class TestDemo extends BaseController {
 
 
     public static void main(String[] args) {
+
+        User user1 = new User();
+        user1.setId(1);
+        User user2 = new User();
+        boolean b = ClassCompareUtil.compareObject(user1, user2);
+
         String[] warehouseNoList = null;
         List<String> list2 = Arrays.asList(warehouseNoList);
 
