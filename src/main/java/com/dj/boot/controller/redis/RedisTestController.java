@@ -138,7 +138,7 @@ public class RedisTestController {
     }
 
     private Boolean redis_setNX() {
-        String userId = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString()+Thread.currentThread().getId();
         String lockKey = "productKey_001";
         try {
             Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, userId, 10, TimeUnit.SECONDS);
@@ -148,6 +148,7 @@ public class RedisTestController {
             //扣减库存
             stockCount();
         } finally {
+            //线程标识相同则删除否,则不删除
             if (Objects.equals(userId, redisTemplate.opsForValue().get(lockKey))) {
                 redisTemplate.delete(lockKey);
             }
