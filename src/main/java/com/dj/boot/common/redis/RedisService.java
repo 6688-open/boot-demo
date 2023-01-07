@@ -1,7 +1,6 @@
 package com.dj.boot.common.redis;
 
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.connection.DataType;
 
 import java.util.Date;
@@ -138,6 +137,13 @@ public interface RedisService {
      */
     boolean delHash(String key, String hashKey);
 
+    /**
+     * 长度
+     * @param key 缓存Key
+     * @return 值
+     */
+    Long hLen(String key);
+
 //    ======================================List===========================================
 
     /**
@@ -203,6 +209,13 @@ public interface RedisService {
      * @return 值
      */
     <T> T lIndex(String key, int index);
+
+    /**
+     * 长度
+     * @param key 缓存Key
+     * @return 值
+     */
+    Long lLen(String key);
 
     /**
      * List-修改指定位置元素值

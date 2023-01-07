@@ -3,12 +3,22 @@ package com.dj.boot.common.redis;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -209,6 +219,19 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
+    public Long hLen(String key) {
+        HashOperations<String, String, ?> hashOperations = redisTemplate.opsForHash();
+        try {
+            Long size = hashOperations.size(key);
+            logger.info("Redis Hash hLen [{}-{}] success.", key, size);
+            return size;
+        } catch (Exception e){
+            logger.error("Redis Hash delHash [{}] fail:{}", key, e);
+            return null;
+        }
+    }
+
+    @Override
     public boolean delHash(String key, String hashKey) {
         HashOperations<String, String, ?> hashOperations = redisTemplate.opsForHash();
         try {
@@ -314,6 +337,17 @@ public class RedisServiceImpl implements RedisService {
             ListOperations<String, T> listListOperations = redisTemplate.opsForList();
             T result = listListOperations.index(key, index);
             return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Long lLen(String key) {
+        try {
+            ListOperations<String, T> listListOperations = redisTemplate.opsForList();
+            Long size = listListOperations.size(key);
+            return size;
         } catch (Exception e) {
             return null;
         }
