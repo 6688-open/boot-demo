@@ -17,6 +17,7 @@
                 <value>classpath:prop/application.properties</value>
                 <value>classpath:prop/ips.properties</value>
                 <value>classpath:prop/mq.properties</value>
+                <value>classpath:prop/db.properties</value>
             </list>
         </property>
         <!--<property name="properties" ref="secApplicationProperties"/>-->

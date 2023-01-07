@@ -1,6 +1,7 @@
 package com.dj.boot.helper;
 
 import com.dj.boot.controller.base.BaseController;
+import com.dj.boot.pojo.User;
 import com.dj.boot.service.test.TestUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,4 +23,7 @@ public class UserHelper extends BaseController {
     }
 
 
+    public User getUser(String testValue) {
+        return new User().setUserName("11111111111").setId(1).setPassword("22222222222222");
+    }
 }

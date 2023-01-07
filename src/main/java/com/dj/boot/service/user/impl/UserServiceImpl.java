@@ -18,6 +18,7 @@ import com.dj.boot.pojo.User;
 import com.dj.boot.pojo.UserDto;
 import com.dj.boot.pojo.useritem.UserItem;
 import com.dj.boot.service.user.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -370,4 +371,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public List<User> queryUserTranslateLineToColumn(UserDto userDto) {
         return userMapper.queryUserTranslateLineToColumn(userDto);
     }
+
+
+    interface Callback<T>{
+        T callBack() throws BizException;
+    }
+
+    @Override
+    public String testCallBack() {
+        String testValue = "wj-01";
+        // 此方法不执行 doCommonOperate里 callback.callBack()时才会调用 userHelper.getUser(testValue);
+        Callback<User> callback = new Callback<User>(){
+            public User callBack() throws BizException {
+                return userHelper.getUser(testValue);
+            }
+        };
+        return doCommonOperate(testValue, callback);
+    }
+
+    private String doCommonOperate(String testValue, Callback<User> callback) {
+        if (StringUtils.isBlank(testValue)) {
+            return "";
+        }
+
+        // 其余情况  走老流程
+        User user = callback.callBack();
+        return user.getPassword();
+    }
+
 }

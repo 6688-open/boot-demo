@@ -299,6 +299,11 @@ public class UserServiceArchiveImpl extends ServiceImpl<UserMapper, User> implem
         return null;
     }
 
+    @Override
+    public String testCallBack() {
+        return null;
+    }
+
 
 
 }

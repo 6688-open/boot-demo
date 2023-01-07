@@ -2,6 +2,7 @@ package com.dj.boot.controller.user;
 
 import com.dj.boot.BootDemoApplicationTests;
 import com.dj.boot.common.util.Validators;
+import com.dj.boot.common.util.db.DBManager;
 import com.dj.boot.common.util.security.Sha256Utils;
 import com.dj.boot.pojo.User;
 import com.dj.boot.pojo.UserDto;
@@ -29,6 +30,9 @@ public class UserTestController extends BootDemoApplicationTests {
 
     @Autowired
     private Validators validators;
+
+
+    DBManager dbManager = DBManager.getInstance();
 
 
 
@@ -157,5 +161,15 @@ public class UserTestController extends BootDemoApplicationTests {
         }
         return new User();
     };
+
+
+    @Test
+    public void test1(){
+        int insert = dbManager.executeSQL("INSERT INTO `user_item` (`user_id`, `nick_name`) VALUES ('112963', '推送出库信息失败')");
+        int update = dbManager.executeSQL("UPDATE `user_item` SET `nick_name`='测试数据' WHERE id=?","3");
+
+        logger.info(String.valueOf(insert));
+        logger.info(String.valueOf(update));
+    }
 
 }
