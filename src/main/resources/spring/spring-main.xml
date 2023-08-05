@@ -24,6 +24,7 @@
                 <value>classpath:prop/ips.properties</value>
                 <value>classpath:prop/mq.properties</value>
                 <value>classpath:prop/db.properties</value>
+                <value>classpath:prop/signature.properties</value>
             </list>
         </property>
         <!--<property name="properties" ref="secApplicationProperties"/>-->
